@@ -1,0 +1,324 @@
+[06/03/16 14:04:30:96] [VERBOSE] [getStorageInfo] svc|version|ouput|124.4.1602111021000
+[06/03/16 14:04:31:11] [VERBOSE] [getStorageInfo] svc|build|output|7.6.1.0
+[06/03/16 14:04:34:26] [VERBOSE] [getStorageInfo] svc|hardware|output|T5H
+[06/03/16 14:04:37:63] [VERBOSE] [getStorageInfo] svc|driveCount|output|216
+[06/03/16 14:04:37:63] [VERBOSE] [vdbenchMainDirectoryCreation] absulte path        : [ benchmark_results ]
+[06/03/16 14:04:37:63] [VERBOSE] [vdbenchMainDirectoryCreation] results path        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_140430 ]
+[06/03/16 14:04:37:64] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_140430 ]
+[06/03/16 14:05:48:80] [VERBOSE] [vdbenchMainDirectoryCreation] absulte path        : [ benchmark_results ]
+[06/03/16 14:05:48:80] [VERBOSE] [vdbenchMainDirectoryCreation] results path        : [ benchmark_results///160306_140548 ]
+[06/03/16 14:05:48:80] [VERBOSE] [createDirectory] creating directory [ benchmark_results///160306_140548 ]
+[06/03/16 14:06:05:63] [VERBOSE] [vdbenchMainDirectoryCreation] absulte path        : [ benchmark_results ]
+[06/03/16 14:06:05:63] [VERBOSE] [vdbenchMainDirectoryCreation] results path        : [ benchmark_results///160306_140605 ]
+[06/03/16 14:06:05:64] [VERBOSE] [createDirectory] creating directory [ benchmark_results///160306_140605 ]
+[06/03/16 14:06:10:34] [VERBOSE] [vdbenchMainDirectoryCreation] absulte path        : [ benchmark_results ]
+[06/03/16 14:06:10:34] [VERBOSE] [vdbenchMainDirectoryCreation] results path        : [ benchmark_results///160306_140610 ]
+[06/03/16 14:06:10:35] [VERBOSE] [createDirectory] creating directory [ benchmark_results///160306_140610 ]
+[06/03/16 14:11:24:31] [VERBOSE] [vdbenchMainDirectoryCreation] absulte path        : [ benchmark_results ]
+[06/03/16 14:11:24:31] [VERBOSE] [vdbenchMainDirectoryCreation] results path        : [ benchmark_results///160306_141124 ]
+[06/03/16 14:11:24:31] [VERBOSE] [createDirectory] creating directory [ benchmark_results///160306_141124 ]
+[06/03/16 14:11:24:50] [VERBOSE] [getStorageInfo] svc|version|ouput|124.4.1602111021000
+[06/03/16 14:11:24:65] [VERBOSE] [getStorageInfo] svc|build|output|7.6.1.0
+[06/03/16 14:11:27:80] [VERBOSE] [getStorageInfo] svc|hardware|output|T5H
+[06/03/16 14:11:38:67] [VERBOSE] [getStorageInfo] svc|version|ouput|124.4.1602111021000
+[06/03/16 14:11:38:82] [VERBOSE] [getStorageInfo] svc|build|output|7.6.1.0
+[06/03/16 14:11:41:97] [VERBOSE] [getStorageInfo] svc|hardware|output|T5H
+[06/03/16 14:11:45:35] [VERBOSE] [getStorageInfo] svc|driveCount|output|216
+[06/03/16 14:11:45:35] [VERBOSE] [vdbenchMainDirectoryCreation] absulte path        : [ benchmark_results ]
+[06/03/16 14:11:45:35] [VERBOSE] [vdbenchMainDirectoryCreation] results path        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_141138 ]
+[06/03/16 14:11:45:35] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_141138 ]
+[06/03/16 14:11:54:30] [VERBOSE] [createHosts]   Host wwpn 21000024ff499591:21000024ff499590
+[06/03/16 14:12:01:62] [VERBOSE] [createStorageVolumes] Running with FAB configuration with ouput
+[06/03/16 14:12:01:63] [VERBOSE] [createStorageVolumes] command| ssh -p 26 rtc02t /home/mk_arrays_master fc raid10 sas_hdd 216 8 27 1 488 COMPRESSED NOFMT NOSCRUB
+[06/03/16 14:13:56:36] [VERBOSE] [getStorageVolumes] svc|mdiskCount|output|27
+[06/03/16 14:13:59:55] [VERBOSE] [getStorageVolumes] svc|mdiskSize|output|1.1TB 2.2TB 
+[06/03/16 14:13:59:55] [VERBOSE] [vdbenchDirectoryResutls] results path        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_141138/64k ]
+[06/03/16 14:13:59:55] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_141138/64k ]
+[06/03/16 14:13:59:55] [VERBOSE] [vdbenchDirectoryResutls] test results path   : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_141138/64k/test_results ]
+[06/03/16 14:13:59:56] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_141138/64k/test_results ]
+[06/03/16 14:13:59:56] [VERBOSE] [vdbenchDirectoryResutls] test files path     : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_141138/64k/test_files ]
+[06/03/16 14:13:59:57] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_141138/64k/test_files ]
+[06/03/16 14:13:59:57] [VERBOSE] [vdbenchDirectoryResutls] test data path      : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_141138/64k/output_data ]
+[06/03/16 14:13:59:57] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_141138/64k/output_data ]
+[06/03/16 14:20:45:64] [VERBOSE] [getStorageInfo] svc|version|ouput|124.4.1602111021000
+[06/03/16 14:20:45:79] [VERBOSE] [getStorageInfo] svc|build|output|7.6.1.0
+[06/03/16 14:20:48:94] [VERBOSE] [getStorageInfo] svc|hardware|output|T5H
+[06/03/16 14:20:52:32] [VERBOSE] [getStorageInfo] svc|driveCount|output|216
+[06/03/16 14:20:52:32] [VERBOSE] [vdbenchMainDirectoryCreation] absulte path        : [ benchmark_results ]
+[06/03/16 14:20:52:32] [VERBOSE] [vdbenchMainDirectoryCreation] results path        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142045 ]
+[06/03/16 14:20:52:33] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142045 ]
+[06/03/16 14:20:58:30] [VERBOSE] [createHosts]   Host wwpn 21000024ff499590:21000024ff499591
+[06/03/16 14:21:02:62] [VERBOSE] [createStorageVolumes] Running with FAB configuration with ouput
+[06/03/16 14:21:02:62] [VERBOSE] [createStorageVolumes] command| ssh -p 26 rtc02t /home/mk_arrays_master fc raid10 sas_hdd 216 8 27 1 488 COMPRESSED NOFMT NOSCRUB
+[06/03/16 14:22:58:11] [VERBOSE] [getStorageVolumes] svc|mdiskCount|output|27
+[06/03/16 14:23:01:30] [VERBOSE] [getStorageVolumes] svc|mdiskSize|output|1.1TB 2.2TB 
+[06/03/16 14:23:01:30] [VERBOSE] [vdbenchDirectoryResutls] results path        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142045/64k ]
+[06/03/16 14:23:01:30] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142045/64k ]
+[06/03/16 14:23:01:30] [VERBOSE] [vdbenchDirectoryResutls] test results path   : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142045/64k/test_results ]
+[06/03/16 14:23:01:30] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142045/64k/test_results ]
+[06/03/16 14:23:01:31] [VERBOSE] [vdbenchDirectoryResutls] test files path     : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142045/64k/test_files ]
+[06/03/16 14:23:01:31] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142045/64k/test_files ]
+[06/03/16 14:23:01:31] [VERBOSE] [vdbenchDirectoryResutls] test data path      : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142045/64k/output_data ]
+[06/03/16 14:23:01:32] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142045/64k/output_data ]
+[06/03/16 14:27:27:16] [VERBOSE] [getStorageInfo] svc|version|ouput|124.4.1602111021000
+[06/03/16 14:27:27:30] [VERBOSE] [getStorageInfo] svc|build|output|7.6.1.0
+[06/03/16 14:29:57:89] [VERBOSE] [getStorageInfo] svc|version|ouput|124.4.1602111021000
+[06/03/16 14:29:58:04] [VERBOSE] [getStorageInfo] svc|build|output|7.6.1.0
+[06/03/16 14:30:01:19] [VERBOSE] [getStorageInfo] svc|hardware|output|T5H
+[06/03/16 14:30:04:57] [VERBOSE] [getStorageInfo] svc|driveCount|output|216
+[06/03/16 14:30:04:57] [VERBOSE] [vdbenchMainDirectoryCreation] absulte path        : [ benchmark_results ]
+[06/03/16 14:30:04:57] [VERBOSE] [vdbenchMainDirectoryCreation] results path        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142957 ]
+[06/03/16 14:30:04:57] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142957 ]
+[06/03/16 14:30:10:56] [VERBOSE] [createHosts]   Host wwpn 21000024ff499590:21000024ff499591
+[06/03/16 14:30:14:90] [VERBOSE] [createStorageVolumes] Running with FAB configuration with ouput
+[06/03/16 14:30:14:90] [VERBOSE] [createStorageVolumes] command| ssh -p 26 rtc02t /home/mk_arrays_master fc raid10 sas_hdd 216 8 27 1 488 COMPRESSED NOFMT NOSCRUB
+[06/03/16 14:32:11:68] [VERBOSE] [getStorageVolumes] svc|mdiskCount|output|27
+[06/03/16 14:32:14:86] [VERBOSE] [getStorageVolumes] svc|mdiskSize|output|1.1TB 2.2TB 
+[06/03/16 14:32:14:86] [VERBOSE] [vdbenchDirectoryResutls] results path        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142957/64k ]
+[06/03/16 14:32:14:86] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142957/64k ]
+[06/03/16 14:32:14:88] [VERBOSE] [vdbenchDirectoryResutls] test results path   : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142957/64k/test_results ]
+[06/03/16 14:32:14:88] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142957/64k/test_results ]
+[06/03/16 14:32:14:89] [VERBOSE] [vdbenchDirectoryResutls] test files path     : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142957/64k/test_files ]
+[06/03/16 14:32:14:89] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142957/64k/test_files ]
+[06/03/16 14:32:14:89] [VERBOSE] [vdbenchDirectoryResutls] test data path      : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142957/64k/output_data ]
+[06/03/16 14:32:14:89] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_142957/64k/output_data ]
+[06/03/16 14:41:54:57] [VERBOSE] [getStorageInfo] svc|version|ouput|124.4.1602111021000
+[06/03/16 14:41:54:72] [VERBOSE] [getStorageInfo] svc|build|output|7.6.1.0
+[06/03/16 14:41:54:87] [VERBOSE] [getStorageInfo] svc|hardware|output|T5H
+[06/03/16 14:41:58:24] [VERBOSE] [getStorageInfo] svc|driveCount|output|216
+[06/03/16 14:41:58:24] [VERBOSE] [vdbenchMainDirectoryCreation] absulte path        : [ benchmark_results ]
+[06/03/16 14:41:58:25] [VERBOSE] [vdbenchMainDirectoryCreation] results path        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144154 ]
+[06/03/16 14:41:58:25] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144154 ]
+[06/03/16 14:43:00:27] [VERBOSE] [vdbenchDeviceList] vdbench sd output: sd=wl13.1,hd=wl13,lun=/dev/mapper/mpathaiix,openflags=o_direct,size=488,threads=4
+[06/03/16 14:43:00:28] [VERBOSE] [vdbenchResultsFiles] test output file        : [ /out_1.3 ]
+[06/03/16 14:43:00:28] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ /1.3_write ]
+[06/03/16 14:43:00:28] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ /1.3_read ]
+[06/03/16 14:43:00:28] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ /1.3_disk_list ]
+[06/03/16 14:43:00:29] [VERBOSE] [vdbenchResultsFiles] test info file          : [ /vdbench_benchmark_information_1.3.log ]
+[06/03/16 14:43:00:29] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f /1.3_write -o /output_1.3 | tee -a /out_1.3
+[06/03/16 14:43:00:32] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> /1.3_read
+[06/03/16 14:43:00:33] [VERBOSE] [vdbenchReadTest] ./vdbench -c -f /1.3_read -o /output_1.3 | tee -a /out_1.3
+[06/03/16 14:43:00:33] [VERBOSE] [vdbenchResultsFiles] test output file        : [ /out_1.7 ]
+[06/03/16 14:43:00:33] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ /1.7_write ]
+[06/03/16 14:43:00:33] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ /1.7_read ]
+[06/03/16 14:43:00:34] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ /1.7_disk_list ]
+[06/03/16 14:43:00:34] [VERBOSE] [vdbenchResultsFiles] test info file          : [ /vdbench_benchmark_information_1.7.log ]
+[06/03/16 14:43:00:34] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f /1.7_write -o /output_1.7 | tee -a /out_1.7
+[06/03/16 14:43:00:35] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> /1.7_read
+[06/03/16 14:43:00:35] [VERBOSE] [vdbenchReadTest] ./vdbench -c -f /1.7_read -o /output_1.7 | tee -a /out_1.7
+[06/03/16 14:43:00:36] [VERBOSE] [vdbenchResultsFiles] test output file        : [ /out_2.3 ]
+[06/03/16 14:43:00:36] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ /2.3_write ]
+[06/03/16 14:43:00:36] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ /2.3_read ]
+[06/03/16 14:43:00:36] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ /2.3_disk_list ]
+[06/03/16 14:43:00:36] [VERBOSE] [vdbenchResultsFiles] test info file          : [ /vdbench_benchmark_information_2.3.log ]
+[06/03/16 14:43:00:37] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f /2.3_write -o /output_2.3 | tee -a /out_2.3
+[06/03/16 14:43:00:38] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> /2.3_read
+[06/03/16 14:43:00:38] [VERBOSE] [vdbenchReadTest] ./vdbench -c -f /2.3_read -o /output_2.3 | tee -a /out_2.3
+[06/03/16 14:43:00:39] [VERBOSE] [vdbenchResultsFiles] test output file        : [ /out_3.5 ]
+[06/03/16 14:43:00:39] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ /3.5_write ]
+[06/03/16 14:43:00:39] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ /3.5_read ]
+[06/03/16 14:43:00:39] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ /3.5_disk_list ]
+[06/03/16 14:43:00:39] [VERBOSE] [vdbenchResultsFiles] test info file          : [ /vdbench_benchmark_information_3.5.log ]
+[06/03/16 14:43:00:40] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f /3.5_write -o /output_3.5 | tee -a /out_3.5
+[06/03/16 14:43:00:40] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> /3.5_read
+[06/03/16 14:43:00:40] [VERBOSE] [vdbenchReadTest] ./vdbench -c -f /3.5_read -o /output_3.5 | tee -a /out_3.5
+[06/03/16 14:43:00:41] [VERBOSE] [vdbenchResultsFiles] test output file        : [ /out_11 ]
+[06/03/16 14:43:00:41] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ /11_write ]
+[06/03/16 14:43:00:41] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ /11_read ]
+[06/03/16 14:43:00:41] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ /11_disk_list ]
+[06/03/16 14:43:00:41] [VERBOSE] [vdbenchResultsFiles] test info file          : [ /vdbench_benchmark_information_11.log ]
+[06/03/16 14:43:00:42] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f /11_write -o /output_11 | tee -a /out_11
+[06/03/16 14:43:00:42] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> /11_read
+[06/03/16 14:43:00:42] [VERBOSE] [vdbenchReadTest] ./vdbench -c -f /11_read -o /output_11 | tee -a /out_11
+[06/03/16 14:47:40:41] [VERBOSE] [getStorageInfo] svc|version|ouput|124.4.1602111021000
+[06/03/16 14:47:40:57] [VERBOSE] [getStorageInfo] svc|build|output|7.6.1.0
+[06/03/16 14:47:49:72] [VERBOSE] [getStorageInfo] svc|hardware|output|T5H
+[06/03/16 14:47:53:09] [VERBOSE] [getStorageInfo] svc|driveCount|output|216
+[06/03/16 14:47:53:10] [VERBOSE] [vdbenchMainDirectoryCreation] absulte path        : [ benchmark_results ]
+[06/03/16 14:47:53:10] [VERBOSE] [vdbenchMainDirectoryCreation] results path        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740 ]
+[06/03/16 14:47:53:10] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740 ]
+[06/03/16 14:48:02:09] [VERBOSE] [createHosts]   Host wwpn 21000024ff499590:21000024ff499591
+[06/03/16 14:48:06:41] [VERBOSE] [createStorageVolumes] Running with FAB configuration with ouput
+[06/03/16 14:48:06:42] [VERBOSE] [createStorageVolumes] command| ssh -p 26 rtc02t /home/mk_arrays_master fc raid10 sas_hdd 216 8 27 1 488 COMPRESSED NOFMT NOSCRUB
+[06/03/16 14:50:01:58] [VERBOSE] [getStorageVolumes] svc|mdiskCount|output|27
+[06/03/16 14:50:04:80] [VERBOSE] [getStorageVolumes] svc|mdiskSize|output|1.1TB 2.2TB 
+[06/03/16 14:50:04:81] [VERBOSE] [vdbenchDirectoryResutls] results path        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k ]
+[06/03/16 14:50:04:81] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k ]
+[06/03/16 14:50:04:81] [VERBOSE] [vdbenchDirectoryResutls] test results path   : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_results ]
+[06/03/16 14:50:04:81] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_results ]
+[06/03/16 14:50:04:82] [VERBOSE] [vdbenchDirectoryResutls] test files path     : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files ]
+[06/03/16 14:50:04:82] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files ]
+[06/03/16 14:50:04:82] [VERBOSE] [vdbenchDirectoryResutls] test data path      : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/output_data ]
+[06/03/16 14:50:04:82] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/output_data ]
+[06/03/16 14:51:06:82] [VERBOSE] [vdbenchDeviceList] vdbench sd output: sd=wl13.1,hd=wl13,lun=/dev/mapper/mpathaiiy,openflags=o_direct,size=488,threads=4
+[06/03/16 14:51:06:83] [VERBOSE] [vdbenchResultsFiles] test output file        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_results/out_1.3 ]
+[06/03/16 14:51:06:83] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/1.3_write ]
+[06/03/16 14:51:06:83] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/1.3_read ]
+[06/03/16 14:51:06:83] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/1.3_disk_list ]
+[06/03/16 14:51:06:84] [VERBOSE] [vdbenchResultsFiles] test info file          : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/vdbench_benchmark_information_1.3.log ]
+[06/03/16 14:51:06:84] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/1.3_write -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/output_data/output_1.3 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_results/out_1.3
+[06/03/16 14:51:06:85] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/1.3_read
+[06/03/16 14:51:06:85] [VERBOSE] [vdbenchReadTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/1.3_read -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/output_data/output_1.3 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_results/out_1.3
+[06/03/16 14:51:06:86] [VERBOSE] [vdbenchResultsFiles] test output file        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_results/out_1.7 ]
+[06/03/16 14:51:06:86] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/1.7_write ]
+[06/03/16 14:51:06:86] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/1.7_read ]
+[06/03/16 14:51:06:86] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/1.7_disk_list ]
+[06/03/16 14:51:06:87] [VERBOSE] [vdbenchResultsFiles] test info file          : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/vdbench_benchmark_information_1.7.log ]
+[06/03/16 14:51:06:87] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/1.7_write -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/output_data/output_1.7 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_results/out_1.7
+[06/03/16 14:51:06:87] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/1.7_read
+[06/03/16 14:51:06:87] [VERBOSE] [vdbenchReadTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/1.7_read -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/output_data/output_1.7 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_results/out_1.7
+[06/03/16 14:51:06:88] [VERBOSE] [vdbenchResultsFiles] test output file        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_results/out_2.3 ]
+[06/03/16 14:51:06:88] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/2.3_write ]
+[06/03/16 14:51:06:88] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/2.3_read ]
+[06/03/16 14:51:06:88] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/2.3_disk_list ]
+[06/03/16 14:51:06:89] [VERBOSE] [vdbenchResultsFiles] test info file          : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/vdbench_benchmark_information_2.3.log ]
+[06/03/16 14:51:06:89] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/2.3_write -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/output_data/output_2.3 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_results/out_2.3
+[06/03/16 14:51:06:89] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/2.3_read
+[06/03/16 14:51:06:89] [VERBOSE] [vdbenchReadTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/2.3_read -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/output_data/output_2.3 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_results/out_2.3
+[06/03/16 14:51:06:90] [VERBOSE] [vdbenchResultsFiles] test output file        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_results/out_3.5 ]
+[06/03/16 14:51:06:90] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/3.5_write ]
+[06/03/16 14:51:06:90] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/3.5_read ]
+[06/03/16 14:51:06:90] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/3.5_disk_list ]
+[06/03/16 14:51:06:91] [VERBOSE] [vdbenchResultsFiles] test info file          : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/vdbench_benchmark_information_3.5.log ]
+[06/03/16 14:51:06:91] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/3.5_write -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/output_data/output_3.5 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_results/out_3.5
+[06/03/16 14:51:06:91] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/3.5_read
+[06/03/16 14:51:06:91] [VERBOSE] [vdbenchReadTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/3.5_read -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/output_data/output_3.5 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_results/out_3.5
+[06/03/16 14:51:06:92] [VERBOSE] [vdbenchResultsFiles] test output file        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_results/out_11 ]
+[06/03/16 14:51:06:92] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/11_write ]
+[06/03/16 14:51:06:92] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/11_read ]
+[06/03/16 14:51:06:92] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/11_disk_list ]
+[06/03/16 14:51:06:93] [VERBOSE] [vdbenchResultsFiles] test info file          : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/vdbench_benchmark_information_11.log ]
+[06/03/16 14:51:06:93] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/11_write -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/output_data/output_11 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_results/out_11
+[06/03/16 14:51:06:93] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/11_read
+[06/03/16 14:51:06:93] [VERBOSE] [vdbenchReadTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_files/11_read -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/output_data/output_11 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_144740/64k/test_results/out_11
+[06/03/16 15:15:04:19] [VERBOSE] [getStorageInfo] svc|version|ouput|124.4.1602111021000
+[06/03/16 15:15:04:34] [VERBOSE] [getStorageInfo] svc|build|output|7.6.1.0
+[06/03/16 15:15:04:50] [VERBOSE] [getStorageInfo] svc|hardware|output|T5H
+[06/03/16 15:15:07:87] [VERBOSE] [getStorageInfo] svc|driveCount|output|216
+[06/03/16 15:15:07:87] [VERBOSE] [vdbenchMainDirectoryCreation] absulte path        : [ benchmark_results ]
+[06/03/16 15:15:07:88] [VERBOSE] [vdbenchMainDirectoryCreation] results path        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504 ]
+[06/03/16 15:15:07:88] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504 ]
+[06/03/16 15:15:17:04] [VERBOSE] [createHosts]   Host wwpn 21000024ff499590:21000024ff499591
+[06/03/16 15:15:21:36] [VERBOSE] [createStorageVolumes] Running with FAB configuration with ouput
+[06/03/16 15:15:21:37] [VERBOSE] [createStorageVolumes] command| ssh -p 26 rtc02t /home/mk_arrays_master fc raid10 sas_hdd 216 8 27 1 488 COMPRESSED NOFMT NOSCRUB
+[06/03/16 15:16:25:50] [VERBOSE] [getStorageVolumes] svc|mdiskCount|output|27
+[06/03/16 15:16:28:69] [VERBOSE] [getStorageVolumes] svc|mdiskSize|output|1.1TB 2.2TB 
+[06/03/16 15:16:28:69] [VERBOSE] [vdbenchDirectoryResutls] results path        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k ]
+[06/03/16 15:16:28:69] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k ]
+[06/03/16 15:16:28:69] [VERBOSE] [vdbenchDirectoryResutls] test results path   : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_results ]
+[06/03/16 15:16:28:70] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_results ]
+[06/03/16 15:16:28:70] [VERBOSE] [vdbenchDirectoryResutls] test files path     : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files ]
+[06/03/16 15:16:28:70] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files ]
+[06/03/16 15:16:28:71] [VERBOSE] [vdbenchDirectoryResutls] test data path      : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/output_data ]
+[06/03/16 15:16:28:71] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/output_data ]
+[06/03/16 15:17:47:44] [VERBOSE] [vdbenchResultsFiles] test output file        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_results/out_1.3 ]
+[06/03/16 15:17:47:44] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/1.3_write ]
+[06/03/16 15:17:47:44] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/1.3_read ]
+[06/03/16 15:17:47:44] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/1.3_disk_list ]
+[06/03/16 15:17:47:44] [VERBOSE] [vdbenchResultsFiles] test info file          : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/vdbench_benchmark_information_1.3.log ]
+[06/03/16 15:17:47:62] [VERBOSE] [vdbenchDeviceList] vdbench sd output: sd=wl13.1,hd=wl13,lun=/dev/mapper/mpathaiiz,openflags=o_direct,size=488,threads=4
+[06/03/16 15:17:47:62] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/1.3_write -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/output_data/output_1.3 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_results/out_1.3
+[06/03/16 15:17:47:64] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/1.3_read
+[06/03/16 15:17:47:64] [VERBOSE] [vdbenchReadTest] ./vbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/1.3_read -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/output_data/output_1.3 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_results/out_1.3
+[06/03/16 15:17:47:67] [VERBOSE] [vdbenchResultsFiles] test output file        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_results/out_1.7 ]
+[06/03/16 15:17:47:67] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/1.7_write ]
+[06/03/16 15:17:47:68] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/1.7_read ]
+[06/03/16 15:17:47:68] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/1.7_disk_list ]
+[06/03/16 15:17:47:68] [VERBOSE] [vdbenchResultsFiles] test info file          : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/vdbench_benchmark_information_1.7.log ]
+[06/03/16 15:17:47:86] [VERBOSE] [vdbenchDeviceList] vdbench sd output: sd=wl13.1,hd=wl13,lun=/dev/mapper/mpathaiiz,openflags=o_direct,size=488,threads=4
+[06/03/16 15:17:47:87] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/1.7_write -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/output_data/output_1.7 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_results/out_1.7
+[06/03/16 15:17:47:89] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/1.7_read
+[06/03/16 15:17:47:89] [VERBOSE] [vdbenchReadTest] ./vbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/1.7_read -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/output_data/output_1.7 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_results/out_1.7
+[06/03/16 15:17:47:91] [VERBOSE] [vdbenchResultsFiles] test output file        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_results/out_2.3 ]
+[06/03/16 15:17:47:91] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/2.3_write ]
+[06/03/16 15:17:47:91] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/2.3_read ]
+[06/03/16 15:17:47:92] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/2.3_disk_list ]
+[06/03/16 15:17:47:92] [VERBOSE] [vdbenchResultsFiles] test info file          : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/vdbench_benchmark_information_2.3.log ]
+[06/03/16 15:17:48:10] [VERBOSE] [vdbenchDeviceList] vdbench sd output: sd=wl13.1,hd=wl13,lun=/dev/mapper/mpathaiiz,openflags=o_direct,size=488,threads=4
+[06/03/16 15:17:48:10] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/2.3_write -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/output_data/output_2.3 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_results/out_2.3
+[06/03/16 15:17:48:12] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/2.3_read
+[06/03/16 15:17:48:12] [VERBOSE] [vdbenchReadTest] ./vbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/2.3_read -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/output_data/output_2.3 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_results/out_2.3
+[06/03/16 15:17:48:14] [VERBOSE] [vdbenchResultsFiles] test output file        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_results/out_3.5 ]
+[06/03/16 15:17:48:14] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/3.5_write ]
+[06/03/16 15:17:48:15] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/3.5_read ]
+[06/03/16 15:17:48:15] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/3.5_disk_list ]
+[06/03/16 15:17:48:15] [VERBOSE] [vdbenchResultsFiles] test info file          : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/vdbench_benchmark_information_3.5.log ]
+[06/03/16 15:17:48:33] [VERBOSE] [vdbenchDeviceList] vdbench sd output: sd=wl13.1,hd=wl13,lun=/dev/mapper/mpathaiiz,openflags=o_direct,size=488,threads=4
+[06/03/16 15:17:48:33] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/3.5_write -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/output_data/output_3.5 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_results/out_3.5
+[06/03/16 15:17:48:35] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/3.5_read
+[06/03/16 15:17:48:35] [VERBOSE] [vdbenchReadTest] ./vbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/3.5_read -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/output_data/output_3.5 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_results/out_3.5
+[06/03/16 15:17:48:38] [VERBOSE] [vdbenchResultsFiles] test output file        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_results/out_11 ]
+[06/03/16 15:17:48:38] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/11_write ]
+[06/03/16 15:17:48:38] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/11_read ]
+[06/03/16 15:17:48:38] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/11_disk_list ]
+[06/03/16 15:17:48:38] [VERBOSE] [vdbenchResultsFiles] test info file          : [ benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/vdbench_benchmark_information_11.log ]
+[06/03/16 15:17:48:57] [VERBOSE] [vdbenchDeviceList] vdbench sd output: sd=wl13.1,hd=wl13,lun=/dev/mapper/mpathaiiz,openflags=o_direct,size=488,threads=4
+[06/03/16 15:17:48:57] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/11_write -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/output_data/output_11 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_results/out_11
+[06/03/16 15:17:48:59] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/11_read
+[06/03/16 15:17:48:60] [VERBOSE] [vdbenchReadTest] ./vbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_files/11_read -o benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/output_data/output_11 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160306_151504/64k/test_results/out_11
+[07/03/16 12:10:56:33] [VERBOSE] [getStorageInfo] svc|version|ouput|124.4.1602111021000
+[07/03/16 12:10:59:49] [VERBOSE] [getStorageInfo] svc|build|output|7.6.1.0
+[07/03/16 12:10:59:64] [VERBOSE] [getStorageInfo] svc|hardware|output|T5H
+[07/03/16 12:11:06:02] [VERBOSE] [getStorageInfo] svc|driveCount|output|216
+[07/03/16 12:11:06:03] [VERBOSE] [vdbenchMainDirectoryCreation] absulte path        : [ benchmark_results ]
+[07/03/16 12:11:06:03] [VERBOSE] [vdbenchMainDirectoryCreation] results path        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056 ]
+[07/03/16 12:11:06:03] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056 ]
+[07/03/16 12:11:06:05] [VERBOSE] [vdbenchMainDirectoryCreation] globalLog file        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/vdbench.global.log ]
+[07/03/16 12:11:12:19] [VERBOSE] [createHosts]   Host wwpn 21000024ff499590:21000024ff499591
+[07/03/16 12:11:19:51] [VERBOSE] [createStorageVolumes] Running with FAB configuration with ouput
+[07/03/16 12:11:19:51] [VERBOSE] [createStorageVolumes] command| ssh -p 26 rtc02t /home/mk_arrays_master fc raid10 sas_hdd 216 8 27 1 488 COMPRESSED NOFMT NOSCRUB
+[07/03/16 12:12:24:13] [VERBOSE] [getStorageVolumes] svc|mdiskCount|output|27
+[07/03/16 12:12:27:32] [VERBOSE] [getStorageVolumes] svc|mdiskSize|output|1.1TB 2.2TB 
+[07/03/16 12:12:27:32] [VERBOSE] [vdbenchDirectoryResutls] results path        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k ]
+[07/03/16 12:12:27:32] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k ]
+[07/03/16 12:12:27:33] [VERBOSE] [vdbenchDirectoryResutls] test results path   : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_results ]
+[07/03/16 12:12:27:33] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_results ]
+[07/03/16 12:12:27:33] [VERBOSE] [vdbenchDirectoryResutls] test files path     : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files ]
+[07/03/16 12:12:27:33] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files ]
+[07/03/16 12:12:27:34] [VERBOSE] [vdbenchDirectoryResutls] test data path      : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/output_data ]
+[07/03/16 12:12:27:34] [VERBOSE] [createDirectory] creating directory [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/output_data ]
+[07/03/16 12:13:45:07] [VERBOSE] [vdbenchResultsFiles] test output file        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_results/out_1.3 ]
+[07/03/16 12:13:45:08] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/1.3_write ]
+[07/03/16 12:13:45:08] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/1.3_read ]
+[07/03/16 12:13:45:08] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/1.3_disk_list ]
+[07/03/16 12:13:45:08] [VERBOSE] [vdbenchResultsFiles] test info file          : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/vdbench_benchmark_information_1.3.log ]
+[07/03/16 12:13:45:26] [VERBOSE] [vdbenchDeviceList] vdbench sd output: sd=wl13.1,hd=wl13,lun=/dev/mapper/mpathaijd,openflags=o_direct,size=488,threads=4
+[07/03/16 12:13:45:26] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/1.3_write -o benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/output_data/output_1.3 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_results/out_1.3
+[07/03/16 12:13:45:63] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/1.3_read
+[07/03/16 12:13:45:64] [VERBOSE] [vdbenchReadTest] ./vbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/1.3_read -o benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/output_data/output_1.3 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_results/out_1.3
+[07/03/16 12:13:45:66] [VERBOSE] [vdbenchResultsFiles] test output file        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_results/out_1.7 ]
+[07/03/16 12:13:45:66] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/1.7_write ]
+[07/03/16 12:13:45:67] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/1.7_read ]
+[07/03/16 12:13:45:67] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/1.7_disk_list ]
+[07/03/16 12:13:45:67] [VERBOSE] [vdbenchResultsFiles] test info file          : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/vdbench_benchmark_information_1.7.log ]
+[07/03/16 12:13:45:85] [VERBOSE] [vdbenchDeviceList] vdbench sd output: sd=wl13.1,hd=wl13,lun=/dev/mapper/mpathaijd,openflags=o_direct,size=488,threads=4
+[07/03/16 12:13:45:85] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/1.7_write -o benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/output_data/output_1.7 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_results/out_1.7
+[07/03/16 12:13:45:87] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/1.7_read
+[07/03/16 12:13:45:88] [VERBOSE] [vdbenchReadTest] ./vbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/1.7_read -o benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/output_data/output_1.7 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_results/out_1.7
+[07/03/16 12:13:45:90] [VERBOSE] [vdbenchResultsFiles] test output file        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_results/out_2.3 ]
+[07/03/16 12:13:45:90] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/2.3_write ]
+[07/03/16 12:13:45:90] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/2.3_read ]
+[07/03/16 12:13:45:90] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/2.3_disk_list ]
+[07/03/16 12:13:45:91] [VERBOSE] [vdbenchResultsFiles] test info file          : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/vdbench_benchmark_information_2.3.log ]
+[07/03/16 12:13:46:08] [VERBOSE] [vdbenchDeviceList] vdbench sd output: sd=wl13.1,hd=wl13,lun=/dev/mapper/mpathaijd,openflags=o_direct,size=488,threads=4
+[07/03/16 12:13:46:09] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/2.3_write -o benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/output_data/output_2.3 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_results/out_2.3
+[07/03/16 12:13:46:11] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/2.3_read
+[07/03/16 12:13:46:11] [VERBOSE] [vdbenchReadTest] ./vbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/2.3_read -o benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/output_data/output_2.3 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_results/out_2.3
+[07/03/16 12:13:46:13] [VERBOSE] [vdbenchResultsFiles] test output file        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_results/out_3.5 ]
+[07/03/16 12:13:46:14] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/3.5_write ]
+[07/03/16 12:13:46:14] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/3.5_read ]
+[07/03/16 12:13:46:14] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/3.5_disk_list ]
+[07/03/16 12:13:46:14] [VERBOSE] [vdbenchResultsFiles] test info file          : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/vdbench_benchmark_information_3.5.log ]
+[07/03/16 12:13:46:32] [VERBOSE] [vdbenchDeviceList] vdbench sd output: sd=wl13.1,hd=wl13,lun=/dev/mapper/mpathaijd,openflags=o_direct,size=488,threads=4
+[07/03/16 12:13:46:32] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/3.5_write -o benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/output_data/output_3.5 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_results/out_3.5
+[07/03/16 12:13:46:34] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/3.5_read
+[07/03/16 12:13:46:35] [VERBOSE] [vdbenchReadTest] ./vbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/3.5_read -o benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/output_data/output_3.5 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_results/out_3.5
+[07/03/16 12:13:46:37] [VERBOSE] [vdbenchResultsFiles] test output file        : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_results/out_11 ]
+[07/03/16 12:13:46:37] [VERBOSE] [vdbenchResultsFiles] vdbench write test file : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/11_write ]
+[07/03/16 12:13:46:37] [VERBOSE] [vdbenchResultsFiles] vdbench read test file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/11_read ]
+[07/03/16 12:13:46:37] [VERBOSE] [vdbenchResultsFiles] vdbench disk list file  : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/11_disk_list ]
+[07/03/16 12:13:46:38] [VERBOSE] [vdbenchResultsFiles] test info file          : [ benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/vdbench_benchmark_information_11.log ]
+[07/03/16 12:13:46:55] [VERBOSE] [vdbenchDeviceList] vdbench sd output: sd=wl13.1,hd=wl13,lun=/dev/mapper/mpathaijd,openflags=o_direct,size=488,threads=4
+[07/03/16 12:13:46:55] [VERBOSE] [vdbenchWriteTest] ./vdbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/11_write -o benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/output_data/output_11 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_results/out_11
+[07/03/16 12:13:46:57] [VERBOSE] [vdbenchReadTest]  hd=wl13,system=wl13.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root >> benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/11_read
+[07/03/16 12:13:46:58] [VERBOSE] [vdbenchReadTest] ./vbench -c -f benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_files/11_read -o benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/output_data/output_11 | tee -a benchmark_results/7.6.1.0/124.4.1602111021000/160307_121056/64k/test_results/out_11

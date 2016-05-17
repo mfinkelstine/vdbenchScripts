@@ -1,0 +1,15 @@
+
+compratio=2.3
+messagescan=no
+	
+
+hd=wl9,system=wl9.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root
+hd=wl10,system=wl10.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root
+hd=wl11,system=wl11.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root
+hd=wl12,system=wl12.eng.rtca,shell=ssh,vdbench=/root/vdbench,user=root
+
+include=disk_list
+
+wd=wd1,sd=*,xfersize=64k,rdpct=0,rhpct=0,seekpct=0
+rd=run1,wd=wd1,iorate=max,elapsed=24h,maxdata=7000g,warmup=360,interval=10
+

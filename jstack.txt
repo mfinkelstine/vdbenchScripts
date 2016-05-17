@@ -1,0 +1,10 @@
+home: /usr/java/jre1.8.0_45
+home: /usr/java/jre1.8.0_45
+jstack: null
+jstack: null
+program: pid=1798 java -client -xmx512m -xms64m -cp ./:./classes:./vdbench.jar vdb.vdbmain -c -f test
+
+Jstatus for 'other' 1798 java -client -xmx512m -xms64m -cp ./:./classes:./vdbench.jar vdb.vdbmain -c -f test
+stderr: null: Command not found.
+Jstack completed successfully
+Jstack ended at Fri Dec 04 06:13:05 IST 2015

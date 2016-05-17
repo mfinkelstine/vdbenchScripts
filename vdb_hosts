@@ -1,0 +1,39 @@
+#!/bin/bash
+
+for i in `seq 1 6`
+do
+	xcli.py host_define host=wl9_$i
+	xcli.py host_define host=wl10_$i
+#	xcli.py host_define host=wl11_$i
+#	xcli.py host_define host=wl12_$i
+done
+
+xcli.py host_add_port host=wl9_1 fcaddress=21000024ff3a4482
+xcli.py host_add_port host=wl9_4 fcaddress=21000024ff3a4483
+xcli.py host_add_port host=wl9_2 fcaddress=21000024ff3a4478
+xcli.py host_add_port host=wl9_5 fcaddress=21000024ff3a4479
+xcli.py host_add_port host=wl9_3 fcaddress=21000024ff3a449a
+xcli.py host_add_port host=wl9_6 fcaddress=21000024ff3a449b
+
+xcli.py host_add_port host=wl10_1 fcaddress=21000024ff3a4458 
+xcli.py host_add_port host=wl10_4 fcaddress=21000024ff3a4459 
+xcli.py host_add_port host=wl10_2 fcaddress=21000024ff3a4072 
+xcli.py host_add_port host=wl10_5 fcaddress=21000024ff3a4073 
+xcli.py host_add_port host=wl10_3 fcaddress=21000024ff3a464c 
+xcli.py host_add_port host=wl10_6 fcaddress=21000024ff3a464d 
+
+exit
+xcli.py host_add_port host=wl11_1 fcaddress=21000024ff499743
+xcli.py host_add_port host=wl11_1 fcaddress=21000024ff499742
+xcli.py host_add_port host=wl11_2 fcaddress=21000024ff38c86d
+xcli.py host_add_port host=wl11_2 fcaddress=21000024ff38c86c
+xcli.py host_add_port host=wl11_3 fcaddress=21000024ff3a4803
+xcli.py host_add_port host=wl11_3 fcaddress=21000024ff3a4802
+
+xcli.py host_add_port host=wl12_1 fcaddress=21000024ff3adfe9
+xcli.py host_add_port host=wl12_1 fcaddress=21000024ff3adfe8
+xcli.py host_add_port host=wl12_2 fcaddress=21000024ff3a406b
+xcli.py host_add_port host=wl12_2 fcaddress=21000024ff3a406a
+xcli.py host_add_port host=wl12_3 fcaddress=21000024ff3a45ab
+xcli.py host_add_port host=wl12_3 fcaddress=21000024ff3a45aa
+

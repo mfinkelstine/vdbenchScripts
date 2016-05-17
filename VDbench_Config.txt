@@ -1,0 +1,48 @@
+compratio=2.3									# 65% compression ratio
+messagescan=no									# Display/don't display messages to screen
+
+# Change the following HD section according to your environment.
+
+hd=host01,system=host01.local,shell=ssh,vdbench=/root/vdbench,user=root		# Host No. 1
+hd=host02,system=host02.local,shell=ssh,vdbench=/root/vdbench,user=root		# Host No. 2
+hd=host03,system=host03.local,shell=ssh,vdbench=/root/vdbench,user=root		# Host No. 3
+hd=host04,system=host04.local,shell=ssh,vdbench=/root/vdbench,user=root 	# Host No. 4
+
+# Change the following section SD/HD/LUN according to your environment.
+
+sd=host01.1,hd=mc022,lun=/dev/mapper/mpathhlo,openflags=o_direct,size=10g,threads=4	# 8 SD for each host 
+sd=host01.2,hd=mc022,lun=/dev/mapper/mpathhlp,openflags=o_direct,size=10g,threads=4
+sd=host01.3,hd=mc022,lun=/dev/mapper/mpathhlq,openflags=o_direct,size=10g,threads=4
+sd=host01.4,hd=mc022,lun=/dev/mapper/mpathhlr,openflags=o_direct,size=10g,threads=4
+sd=host01.5,hd=mc022,lun=/dev/mapper/mpathhls,openflags=o_direct,size=10g,threads=4
+sd=host01.6,hd=mc022,lun=/dev/mapper/mpathhlt,openflags=o_direct,size=10g,threads=4
+sd=host01.7,hd=mc022,lun=/dev/mapper/mpathhlu,openflags=o_direct,size=10g,threads=4
+sd=host01.8,hd=mc022,lun=/dev/mapper/mpathhlv,openflags=o_direct,size=10g,threads=4
+sd=host02.1,hd=mc023,lun=/dev/mapper/mpathhiw,openflags=o_direct,size=10g,threads=4
+sd=host02.2,hd=mc023,lun=/dev/mapper/mpathhix,openflags=o_direct,size=10g,threads=4
+sd=host02.3,hd=mc023,lun=/dev/mapper/mpathhiy,openflags=o_direct,size=10g,threads=4
+sd=host02.4,hd=mc023,lun=/dev/mapper/mpathhiz,openflags=o_direct,size=10g,threads=4
+sd=host02.5,hd=mc023,lun=/dev/mapper/mpathhja,openflags=o_direct,size=10g,threads=4
+sd=host02.6,hd=mc023,lun=/dev/mapper/mpathhjb,openflags=o_direct,size=10g,threads=4
+sd=host02.7,hd=mc023,lun=/dev/mapper/mpathhjc,openflags=o_direct,size=10g,threads=4
+sd=host02.8,hd=mc023,lun=/dev/mapper/mpathhjd,openflags=o_direct,size=10g,threads=4
+sd=host03.1,hd=mc024,lun=/dev/mapper/mpathhqg,openflags=o_direct,size=10g,threads=4
+sd=host03.2,hd=mc024,lun=/dev/mapper/mpathhqh,openflags=o_direct,size=10g,threads=4
+sd=host03.3,hd=mc024,lun=/dev/mapper/mpathhqi,openflags=o_direct,size=10g,threads=4
+sd=host03.4,hd=mc024,lun=/dev/mapper/mpathhqj,openflags=o_direct,size=10g,threads=4
+sd=host03.5,hd=mc024,lun=/dev/mapper/mpathhqk,openflags=o_direct,size=10g,threads=4
+sd=host03.6,hd=mc024,lun=/dev/mapper/mpathhql,openflags=o_direct,size=10g,threads=4
+sd=host03.7,hd=mc024,lun=/dev/mapper/mpathhqm,openflags=o_direct,size=10g,threads=4
+sd=host03.8,hd=mc024,lun=/dev/mapper/mpathhqn,openflags=o_direct,size=10g,threads=4
+sd=host04.1,hd=mc025,lun=/dev/mapper/mpathgtt,openflags=o_direct,size=10g,threads=4
+sd=host04.2,hd=mc025,lun=/dev/mapper/mpathgtu,openflags=o_direct,size=10g,threads=4
+sd=host04.3,hd=mc025,lun=/dev/mapper/mpathgtv,openflags=o_direct,size=10g,threads=4
+sd=host04.4,hd=mc025,lun=/dev/mapper/mpathgtw,openflags=o_direct,size=10g,threads=4
+sd=host04.5,hd=mc025,lun=/dev/mapper/mpathgtx,openflags=o_direct,size=10g,threads=4
+sd=host04.6,hd=mc025,lun=/dev/mapper/mpathgty,openflags=o_direct,size=10g,threads=4
+sd=host04.7,hd=mc025,lun=/dev/mapper/mpathgtz,openflags=o_direct,size=10g,threads=4
+sd=host04.8,hd=mc025,lun=/dev/mapper/mpathgua,openflags=o_direct,size=10g,threads=4
+
+wd=wd1,sd=*,xfersize=4k,rdpct=0,rhpct=0,seekpct=0					# Workload Definition
+rd=run1,wd=wd1,iorate=max,elapsed=30m,maxdata=800g,warmup=360,interval=10		# Running Definition
+

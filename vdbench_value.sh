@@ -245,17 +245,13 @@ printf "%10s | %1s\n" "vdbench key" "param value"
 
 }
 function logger(){
-	#echo "[`date '+%d/%m/%y %H:%M:%S:%2N'`]" $@
 	type=$1
     ouput=$2
-	if [[ $type == "debug" ]]; then
-		#printf "[%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "$@"
+	if [[ $type == "debug" ]]; then		
 		if [[ ${log[debug]} == "true" ]] ; then printf "[%s] [%s  ] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "DEBUG" "${FUNCNAME[1]}" "$ouput" | tee -a ${log[debug]}; fi
 	elif [[ $type == "info" ]] ; then
-		#printf "[%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "$@"
 		printf "[%s] [%s   ] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "INFO" "$ouput" | tee -a ${log[info]}
 	elif [[ $type == "error" ]] ; then
-		#printf "[%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "$@"
 		printf "[%s] [%s     ] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "ERROR" "${FUNCNAME[1]}" "$ouput" | tee -a ${log[error]}
 	elif [[ $type == "fetal" ]] ; then
 		printf "[%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "FETAL" "$output" | tee -a ${log[error]}
@@ -268,7 +264,6 @@ function logger(){
 }
 function debug(){
     [ ${log[debug]} == "true"  ] && $@
-    
 }
 
 function storageRemoveHosts() {
@@ -365,13 +360,13 @@ function getStorageInfo(){
 }
 
 function getStorageVolumes(){
-		logger "debug" "svc|mdiskCount|command|\"ssh -p 26 ${storageInfo[stand_name]} lsmdisk -nohdr | wc -l\""
-		storageInfo[mdiskCount]=$( ssh -p 26 ${storageInfo[stand_name]} lsmdisk -nohdr | wc -l )
-		logger "ver" "svc|mdiskCount|output|${storageInfo[mdiskCount]}"
+	logger "debug" "svc|mdiskCount|command|\"ssh -p 26 ${storageInfo[stand_name]} lsmdisk -nohdr | wc -l\""
+	storageInfo[mdiskCount]=$( ssh -p 26 ${storageInfo[stand_name]} lsmdisk -nohdr | wc -l )
+	logger "ver" "svc|mdiskCount|output|${storageInfo[mdiskCount]}"
 
-		logger "debug" "svc|mdiskSize|command|\"ssh -p 26 ${storageInfo[stand_name]} lsmdisk -nohdr | awk '{ print $7 }' | uniq | tr '\n' ' '\""
-		storageInfo[mdiskSize]=$( ssh -p 26 ${storageInfo[stand_name]} lsmdisk -nohdr | awk '{ print $7 }' | uniq | tr '\n' ' ' )
-		logger "ver" "svc|mdiskSize|output|${storageInfo[mdiskSize]}"
+	logger "debug" "svc|mdiskSize|command|\"ssh -p 26 ${storageInfo[stand_name]} lsmdisk -nohdr | awk '{ print $7 }' | uniq | tr '\n' ' '\""
+	storageInfo[mdiskSize]=$( ssh -p 26 ${storageInfo[stand_name]} lsmdisk -nohdr | awk '{ print $7 }' | uniq | tr '\n' ' ' )
+	logger "ver" "svc|mdiskSize|output|${storageInfo[mdiskSize]}"
 }
 
 function vdbenchDirectoryResutls() {

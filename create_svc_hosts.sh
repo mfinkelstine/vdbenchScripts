@@ -5,7 +5,7 @@ storage=$1
 test_type=$2
 clients=( $3  )
 ports=$4
-debug="0"
+debug="1"
 #----------- run params -------------
 volume_size=40G
 threads=4
@@ -26,7 +26,7 @@ end=$'\e[0m'
 function usage(){
     echo -e " $0 <storage_name> <hosts_list> <test_type> <wwpn_ports> 
      usage :  
-     \tstorage_name : [ $grn rtcsvc15 | rtcsvc05 | rtc03f ] 
+     \tstorage_name : [ $grn rtcsvc15$end$red |$end rtcsvc05 | rtc03f ] 
      \thosts_list   : [ \"wl9\" |  \"wl9 wl10 wl11 wl12\" ] 
      \ttest_type    : [ csop | vdbench ] 
      \twwpn_ports   : [ all | 2 | 4 ] \n
@@ -77,13 +77,13 @@ function addHosts(){
         elif [[ $test_type == "vdbench" ]]
         then
             if [ ! -z $ports ] ; then 
-            	echo "Creating host $ports"
+            	echo "Creating host $c"
 		wwpn=`ssh $c /usr/global/scripts/qla_show_wwpn.sh | sort | grep Up | awk '{print $1}' | tr "\n" ":"| sed -e 's|\:$||g'`
                 if [[ $debug -eq "0" ]] ; then 
 			echo ssh $storage -p 26 svctask mkhost -fcwwpn $wwpn  -force -iogrp io_grp0:io_grp1:io_grp2:io_grp3 -name $c -type generic 
 		else
             		echo "Creating host $c"
-                	ssh $storage -p 26 svctask mkhost -fcwwpn $wwpn  -force -iogrp io_grp0:io_grp1:io_grp2:io_grp3 -name $c -type generic 2&1>/dev/null
+                	ssh $storage -p 26 svctask mkhost -fcwwpn $wwpn  -force -iogrp io_grp0:io_grp1:io_grp2:io_grp3 -name $c -type generic
 		fi
             fi
         fi

@@ -5,6 +5,7 @@ storage=$1
 test_type=$2
 clients=( $3  )
 ports=$4
+debug="0"
 #----------- run params -------------
 volume_size=40G
 threads=4
@@ -14,16 +15,25 @@ interval=10
 block_size=64k 
 vol_num=64
 
+red=$'\e[1;31m'
+grn=$'\e[1;32m'
+yel=$'\e[1;33m'
+blu=$'\e[1;34m'
+mag=$'\e[1;35m'
+cyn=$'\e[1;36m'
+end=$'\e[0m'
+
 function usage(){
     echo -e " $0 <storage_name> <hosts_list> <test_type> <wwpn_ports> 
      usage :  
-     \tstorage_name : [ rtcsvc15 | rtcsvc05 | rtc03f ] 
+     \tstorage_name : [ $grn rtcsvc15 | rtcsvc05 | rtc03f ] 
      \thosts_list   : [ \"wl9\" |  \"wl9 wl10 wl11 wl12\" ] 
      \ttest_type    : [ csop | vdbench ] 
      \twwpn_ports   : [ all | 2 | 4 ] \n
      $0 rtcsvc17 \"wl13 wl14 wl15 wl16\" csop all"
 exit
 }
+
 function checkHostWWPN() {
 
 if [[ $ports != "" ]] ; then
@@ -32,6 +42,7 @@ if [[ $ports != "" ]] ; then
         exit
     fi
 else 
+
     wwpn_count=`ssh $c /usr/global/scripts/qla_show_wwpn.sh | wc -l`
     echo "total ports $wwpn_count"
 
@@ -49,12 +60,12 @@ fi
 }
 
 function addHosts(){
+    printf "%s" "${clients[@]}"
     for c in ${clients[@]}
     do  
         count=0
         if [[ $test_type == "csop" ]]
         then
- #           checkHostWWPN $c $ports
             echo "Creating host $c on $1"
             hwwpn=`ssh $c /usr/global/scripts/qla_show_wwpn.sh| sort | grep Up | awk '{print $1}' | tr "\n" " "| sed -e 's|\:$||g'`
             for wwpn in ${hwwpn[@]}; 
@@ -65,35 +76,35 @@ function addHosts(){
             done 
         elif [[ $test_type == "vdbench" ]]
         then
-            if [[ -z $ports ]] ; then 
-  #              checkHostWWPN $c $ports
-                wwpn=`ssh $c /usr/global/scripts/qla_show_wwpn.sh | sort | grep Up | awk '{print $1}' | tr "\n" ":"| sed -e 's|\:$||g'`
-                echo ssh $storage -p 26 svctask mkhost -fcwwpn $wwpn  -force -iogrp io_grp0:io_grp1:io_grp2:io_grp3 -name $c -type generic
-                ssh $storage -p 26 svctask mkhost -fcwwpn $wwpn  -force -iogrp io_grp0:io_grp1:io_grp2:io_grp3 -name $c -type generic
+            if [ ! -z $ports ] ; then 
+            	echo "Creating host $ports"
+		wwpn=`ssh $c /usr/global/scripts/qla_show_wwpn.sh | sort | grep Up | awk '{print $1}' | tr "\n" ":"| sed -e 's|\:$||g'`
+                if [[ $debug -eq "0" ]] ; then 
+			echo ssh $storage -p 26 svctask mkhost -fcwwpn $wwpn  -force -iogrp io_grp0:io_grp1:io_grp2:io_grp3 -name $c -type generic 
+		else
+            		echo "Creating host $c"
+                	ssh $storage -p 26 svctask mkhost -fcwwpn $wwpn  -force -iogrp io_grp0:io_grp1:io_grp2:io_grp3 -name $c -type generic 2&1>/dev/null
+		fi
             fi
         fi
     done
 }
 
-#------------- defined ports 
-#if [ -z $ports ] ; 
-#then
-#    echo "no defnied ports"
-#    ports="100"
-#fi
-#------------- delete old clients
+if [ -z "$ports" ] ; then
+	ports="all"
+fi
 
+printf "%s | %s | %s | %s \n" "$storage ${clients[@]} $ports $test_type"
 ssh $storage -p 26 "i=\"0\"; while [ 1 -lt \`lshost|wc -l\` ]; do svctask rmhost -force \$i; i=\$[\$i+1]; done"
 #------------- add clients
 if [[ $test_type  == "csop" ]] ; then
-		if [[ -z $ports ]] ; then
-			echo "choosed 4 ports design"
-            addHosts $storage $clients $ports $test_type
-		else
-			echo "choosed 2 ports design"
-            #ports=2
-            addHosts $storage $clients $ports $test_type
-		fi
+	if [[ -z $ports ]] ; then
+		echo "choosed 4 ports design"
+        addHosts $storage $clients $ports $test_type
+	else
+		echo "choosed 2 ports design"
+        addHosts $storage $clients $ports $test_type
+	fi
 elif [[ $test_type == "vdbench" ]]; then
         echo "Connecting full vdbench ports"
         addHosts $storage $clients $ports $test_type

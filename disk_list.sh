@@ -1,7 +1,7 @@
 #!/bin/bash
 clients=( $1 )
 disklist=$2
-local debug=no
+debug=no
 
 if [ -z "$disklist" ] ; then
     disklist=disk_list

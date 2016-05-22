@@ -8,7 +8,15 @@ declare -A vdbenchResultsLog
 declare -A vdbench
 declare -A storageInfo
 
-
+# color shcames
+red=$'\e[1;31m'
+grn=$'\e[1;32m'
+yel=$'\e[1;33m'
+blu=$'\e[1;34m'
+mag=$'\e[1;35m'
+cyn=$'\e[1;36m'
+end=$'\e[0m'
+#
 directoryStracture[absPath]="benchmark_results"
 directoryStracture[bas]="benchmark_results"
 log[timestamp]=$(date +%y%m%d_%H%M%S)
@@ -114,6 +122,12 @@ do
         --cleanenv )
             vdbench_params[cleanenv]="true"
             ;;
+        --sleep )
+            vdbench_params[sleep]="$1"
+            ;;
+        -r | --dry )
+            log[dry]="true"
+            ;;
         --help )
             usage
             ;;
@@ -153,15 +167,16 @@ echo -e "\
    -i  | --interval    test results interval output display <defaul 10 sec>
  Vdbench extra options:
    --seekpct           
-   --
+   --sleep              default 180 seconds
  other parameters :
   --mail              send results by mail : <default RTC_SVC>
   --xlsx              create excel file : <default disable>
   --upload            upload json file to par if no errors found
 
  debug info :
-  -b | --debug        default false
+  -d | --debug        default false
   -v | --verbose      default false 
+  -r | --dry      default false
 
 
 Example: Creating 128 volums of 488 GB and attaching them 'wl9 wl10 wl11'\r
@@ -222,6 +237,10 @@ if [[ ! ${log[verbose]} ]];then
 	log[verbose]="false"
 	printf "verbose not defined %s\n" ${log[verbose]}
 fi
+if [[ ! ${log[dry]} ]];then
+	log[dry]="false"
+	#printf "dry mode set only display only output %s\n" ${log[dry]}
+fi
 if [[ ! ${storageInfo[voltype]} ]];then
 #	storageInfo[voltype]="cmp"
 	storageInfo[voltype]="COMPRESSED"
@@ -229,7 +248,9 @@ fi
 if [[ ! ${storageInfo[raidType]} ]] ; then
 	storageInfo[raidType]="raid10"
 fi
-
+if [[ ! ${vdbench_params[sleep]} ]] ; then
+    vdbench_params[sleep]="180"
+fi
 if [[ ! $vdbench_params[cleanenv]} ]]; then
     vdbench_params[cleanenv]="true"
 fi
@@ -248,15 +269,15 @@ function logger(){
 	type=$1
     ouput=$2
 	if [[ $type == "debug" ]]; then		
-		if [[ ${log[debug]} == "true" ]] ; then printf "[%s] [%s  ] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "DEBUG" "${FUNCNAME[1]}" "$ouput" | tee -a ${log[debug]}; fi
+		if [[ ${log[debug]} == "true" ]] ; then printf "[%s] [$red%s  $end] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "DEBUG" "${FUNCNAME[1]}" "$ouput" | tee -a ${log[debug]}; fi
 	elif [[ $type == "info" ]] ; then
-		printf "[%s] [%s   ] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "INFO" "$ouput" | tee -a ${log[info]}
+		printf "[%s] [$grn%s   $end] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "INFO" "$ouput" | tee -a ${log[info]}
 	elif [[ $type == "error" ]] ; then
-		printf "[%s] [%s     ] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "ERROR" "${FUNCNAME[1]}" "$ouput" | tee -a ${log[error]}
+		printf "[%s] [$yel%s     $end] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "ERROR" "${FUNCNAME[1]}" "$ouput" | tee -a ${log[error]}
 	elif [[ $type == "fetal" ]] ; then
-		printf "[%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "FETAL" "$output" | tee -a ${log[error]}
+		printf "[%s] $red%s$end\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "FETAL" "$output" | tee -a ${log[error]}
 	elif [[ $type == "ver" ]] ; then
-		if [[ ${log[verbose]} == "true" ]] ; then printf "[%s] [%s] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "VERBOSE" "${FUNCNAME[1]}" "$ouput" | tee -a ${log[verbose]} ;fi
+		if [[ ${log[verbose]} == "true" ]] ; then printf "[%s] [$blu%s$end] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "VERBOSE" "${FUNCNAME[1]}" "$ouput" | tee -a ${log[verbose]} ;fi
 	elif [[ ! $type =~ "debug|ver|error|info" ]] ; then
 		printf "[%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "$type" 
 	fi
@@ -277,7 +298,12 @@ function storageRemoveHosts() {
 	sleep 2
 }
 function hostRescan(){
-	storageInfo[vdiskPerClient]=${storageInfo[volnum]} 
+    volnum=${storageInfo[volnum]}
+    hostCount=${storageInfo[hostCount]}
+    printf "%s %s" "$volnum" "$hostCount"
+exit
+
+	storageInfo[vdiskPerClient]=$(( volnum / hostCount ))
 	for c in "${vdbench_params[clients]}"; do
         logger "info" "$c host rescanning "
         ssh $c /usr/global/scripts/rescan_all.sh &> ${log[globalLog]}
@@ -309,7 +335,7 @@ totalFC=0
 for c in ${vdbench_params[clients]}
 do
 	storageInfo[hostCount]=$(( storageInfo[hostCount] + 1 ))
-	logger "info" "total host ${storageInfo[clientsCount]}"
+	#logger "info" "total host ${storageInfo[hostCount]}"
     wwpn=`ssh $c /usr/global/scripts/qla_show_wwpn.sh | grep Up | awk '{print $1}' | tr "\n" ":"| sed -e 's|\:$||g'`
     wwpnHostCount=`ssh $c /usr/global/scripts/qla_show_wwpn.sh | grep -c Up `
     totalFC=$((  totalFC + $wwpnHostCount ))
@@ -489,7 +515,7 @@ count=1
             count=$(( count+1  ))
         else
             echo  "sd=$client.$count,hd=$client,lun=$device,openflags=o_direct,size=${storageInfo[volsize]},threads=${vdbench[threads]}" >> ${vdbench[disk_list]}
-            count=$(( count+1  ))
+       Count     count=$(( count+1  ))
         fi
     done
 done
@@ -573,21 +599,20 @@ rd=run1,wd=wd1,iorate=max,elapsed=24h,maxdata=${vdbench[read_data]},warmup=360,i
 ###
 # function jsonFile
 # function storageInfo
-# function storageInfo
-# function createTestFile
-# function storageInfo
-
+# function createTestFile()
+# function storageInfo()
+# function send_email_results()
 parse_parameter "$@"
 checking_params 
 if [[ ${log[debug]} == "true" ]]  ; then print_params ; fi
 getStorageInfo
 vdbenchMainDirectoryCreation
-storageRemoveHosts
+#storageRemoveHosts
 createHosts
 
 for bs in ${vdbench[blocksize]}; do
 	log[testCount]=1
-	createStorageVolumes	
+#	createStorageVolumes	
 	getStorageVolumes
 	vdbenchDirectoryResutls
 	hostRescan

@@ -142,15 +142,15 @@ sub collectStorageInfo($){
 	 $storageInfo{resultsType}      = $j->{ResultsType};
 	 $storageInfo{coleto_level}     = $j->{coleto_level};
 	 $storageInfo{clients_name}     = $j->{Clients};
-	 $storageInfo{Coletos}     = $j->{coleto};
-	 $storageInfo{clientMgmt}  = $j->{ClientMgmt};
-	 $storageInfo{testType}    = $j->{testType};
-	 $storageInfo{testmode}    = $j->{testmode};
-	 $storageInfo{FCperClient} = $j->{FCperClient};
-	 $config{standName}   = $j->{stand};
-	$storageInfo{standNameType} = $j->{stand};
-     $storageInfo{vdisk_count} = $j->{vdiskCount};
-     $storageInfo{mdisk_size}  = $j->{totalDisks};
+	 $storageInfo{Coletos}     		= $j->{coleto};
+	 $storageInfo{clientMgmt}  		= $j->{ClientMgmt};
+	 $storageInfo{testType}    		= $j->{testType};
+	 $storageInfo{testmode}      	= $j->{testmode};
+	 $storageInfo{FCperClient}   	= $j->{FCperClient};
+	 $config{standName}          	= $j->{stand};
+	 $storageInfo{standNameType} = $j->{stand};
+     $storageInfo{vdisk_count}   = $j->{vdiskCount};
+     $storageInfo{mdisk_size}    = $j->{totalDisks};
 
 	#    print Dumper %config;
 	} else {
@@ -350,13 +350,18 @@ sub vdbenchResultsToJson($) {
 	my (@compRatio , $compRatCount,$k);
     foreach my $cmp (keys %vdbench_results) {
     	if ( $cmp eq $lastElement ){
-		#print "This is the last hash element [ ".$cmp."]";
+		print "This is the last hash element [ ".$cmp."]";
 			@compRatio = grep { $_ =~ /$cmp/ } keys %vdbecnOutputCount;
         	$compRatCount = $vdbecnOutputCount{$compRatio[0]};
         	my $krvalue = "";
 			my $cmpLastElement = (keys $vdbench_results{$cmp})[-1];
         	foreach $k ( keys $vdbench_results{$cmp} ){
+				if (!defined $k){
+					print "line 360".$k; 
+					exit ;
+				}
 				if ( $cmpLastElement eq $k ){
+					
 					$krvalue = $k;
             		$krvalue =~ s/\_\d+//g;
             			if ( $krvalue eq "cmp_rate" ){

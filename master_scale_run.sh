@@ -17,17 +17,20 @@ vol_num=128
 debug_verbose="false"
 
 comp_ratio=( "1.3" "1.7" "2.3" "3.5" "11" )
+#comp_ratio=( "2.3" "3.5" "11" )
 #comp_ratio=( "3.5" )
 #------ test defenitions -----
 WRITE="write_test_"
 READ="read_test_"
+
 
 if [[ $threads == "" ]] ; 
 then
     threads=16
 fi
 if [[ ${#blocksize[@]} -eq 0 ]]; then
-    blocksize=( "1m" "512k" "256k" "128k" "64k" "32k" "16k" "8k" "4k" )
+    #blocksize=( "1m" "512k" "256k" "128k" "64k" "32k" "16k" "8k" "4k" )
+    blocksize=( "16k" "8k" "4k" )
 fi
 
 #-------------  delete old clients
@@ -35,9 +38,12 @@ echo "Removing Existing hosts : "$(ssh -p 26 $1 lshost -nohdr | awk '{print $2}'
 ssh $1 -p 26 "i=\"0\"; while [ 1 -lt \`lshost|wc -l\` ]; do svctask rmhost -force \$i; i=\$[\$i+1]; done"
 #-------------  add clients
 echo "Creating hosts"
+totalFC=0
 for c in ${clients[@]}
 do
     wwpn=`ssh $c /usr/global/scripts/qla_show_wwpn.sh | grep Up | awk '{print $1}' | tr "\n" ":"| sed -e 's|\:$||g'`
+    wwpnHostCount=`ssh $c /usr/global/scripts/qla_show_wwpn.sh | grep -c Up `
+    totalFC=$((  totalFC + $wwpnHostCount ))
     if [[ $debug_verbose == "true" ]]; then
         echo "Creating host $c on $1 adding wwpn $wwpn"
         echo "commmand : ssh $1 -p 26 svctask mkhost -fcwwpn $wwpn  -force -iogrp io_grp0:io_grp1:io_grp2:io_grp3 -name $c -type generic 2>/dev/null"
@@ -58,8 +64,8 @@ svcBuild=$(ssh $1 -p 26 cat /compass/vrmf )
 results_path="vdbench_benchmark_test"
 echo -e "===[ global test parameters ]=============================================================
 Storage name          : [ $1 ]
-SVC Version           : [ $svcVersion ]
-SVC Build             : [ $svcBuild ]
+SVC Version           : [ $svcBuild ]
+SVC Build             : [ $svcVersion ]
 Threads per lun       : [ $threads ]
 Test Block Size       : [ ${blocksize[@]} ]
 \n===[ Data Set ] =============================================================================
@@ -70,6 +76,37 @@ Total read data       : [ $read_data ]
 \n"
 
 time_stamp=$(date +%y%m%d_%H%M%S)
+rpath="$results_path/$svcBuild/$svcVersion/$time_stamp"
+storageInfoJson="$results_path/$svcBuild/$svcVersion/$time_stamp/storageInfo.json"
+if [ ! -d "$rpath" ] ;then
+	mkdir -p $rpath
+fi
+echo "
+{
+ 	\"ResultsType\":          \"DEV\",
+        \"testType\":             \"IOZONE\",
+        \"stand\":                \"$1\",
+        \"SVC_Version\":          \"$svcBuild\",
+        \"SVCBuilds\":            \"$svcVersion\",
+        \"backend\":              \"$backendName\",
+        \"diskType\":             \"NONE\",
+        \"noOfDisks\":            \"8\",
+        \"totalDisks\":           \"1.2\",
+        \"Raid\":                 \"\",
+        \"testmode\":             \"CMP\",
+        \"vdiskCount\":           \"$vol_num\",
+        \"vdiskSize\":            \"$volume_size\",
+        \"coleto\":               \"\",
+        \"coleto_level\":         \"2\",
+        \"ClientMgmt\":           \"`hostname`\",
+        \"Clients\":              \"${clients[@]}\",
+        \"ClientsNum\":           \"${#clients[@]}\",
+        \"ThreadsPerClient\": 	  \"$threads\",
+        \"LunPerClient\":         \"$(( $vol_num / ${#clients[@]} ))\",
+        \"FCperClient\":          \"$(( $totalFC / ${#clients[@]} ))\"
+
+" > $storageInfoJson
+
 for bs in ${blocksize[@]}; do
 #for bs in 1m 512k 256k 128k 64k 32k 16k 8k 4k ; do
 
@@ -112,18 +149,21 @@ verbose output        : [ $debug_verbose ]
 	echo -e "Removing mdiskgrp id : $mdiskid from $1" | tee -a $rpath/$test_info
 	ssh $1 -p 26 svctask rmmdiskgrp -force $mdiskid
 
+	hardwareType=`ssh $1 -p 26 sainfo lshardware | grep hardware | awk '{print \$2}'`
 	ssh $1 -p 26 ls /home/mk_arrays_master >/dev/null
 	if [[ $? == 0 ]]; then
 #         ssh -p 26 $1 /home/mk_arrays_master fc raid5 sas_hdd 238 8 32 128 400 COMPRESSED NOFMT AUTOEXP >/dev/null
         array_drive=8
         number_of_drive=$(ssh -p 26 $1 lsdrive -nohdr | wc -l)
         number_of_mdisk_group=$(( $number_of_drive / $array_drive ))
+	vol_size=488
       	if [[ $debug_verbose =~ "true" ]]; then
 	    echo "Running with FAB configuration with ouput"
-            ssh -p 26 $1 /home/mk_arrays_master fc raid10 sas_hdd $number_of_drive $array_drive $number_of_mdisk_group $vol_num 500 COMPRESSED NOFMT NOSCRUB | tee -a  $rpath/$test_info
+            ssh -p 26 $1 /home/mk_arrays_master fc raid10 sas_hdd $number_of_drive $array_drive $number_of_mdisk_group $vol_num $vol_size COMPRESSED NOFMT NOSCRUB | tee -a  $rpath/$test_info
         else 
 	    echo "Creating volumes on $1"
-            ssh -p 26 $1 /home/mk_arrays_master fc raid10 sas_hdd $number_of_drive $array_drive $number_of_mdisk_group $vol_num 500 COMPRESSED NOFMT NOSCRUB &> $rpath/$test_info
+		                              #fc, raid5, sas_hdd, 216, 8, 27, 64, 10, NOSCRUB, NOFMT, COMPRESSED, NOCACHE
+            ssh -p 26 $1 /home/mk_arrays_master fc raid10 sas_hdd $number_of_drive $array_drive $number_of_mdisk_group $vol_num $vol_size COMPRESSED NOFMT NOSCRUB &> $rpath/$test_info
         fi
 	else
 		echo "Running with BFN configuration"
@@ -134,6 +174,7 @@ verbose output        : [ $debug_verbose ]
 
 
 #-------------  rescan multipath on clients
+#-------------  rescan multipath on clients
  
     echo -e "++ rescan on clients +++++++++++++++++++++++++++++ " | tee -a $rpath/$test_info
     for client in "${clients[@]}"; do
@@ -141,6 +182,14 @@ verbose output        : [ $debug_verbose ]
         ssh $client /usr/global/scripts/rescan_all.sh >> $rpath/$test_info
         echo "vdisks : [ " $(ssh $client multipath -l | grep -c mpath)" ]"| tee -a $rpath/$test_info
     done
+
+
+
+
+echo "
+        \"RaceMQVersion\":        \"$(ssh -p 26 $1 /data/race/rtc_racemqd -v | grep race | awk '{print $2}')\",
+        \"MultiRace\":            \"$(ssh -p 26 $1 ps -efL | grep race | awk '$10 ~ /racemqAd/ { racemqAd++ } $10 ~ /racemqAd/ { racemqBd++ } END { if( racemqAd > 1 && racemqBd > 1 ) { print racemqAd" "racemqBd } else if ( rtc_racemqd > 1 ) { print "1" } else if ( racemqAd < 1 && racemqBd < 1 && rtc_racemqd < 1 ) { print "noRaceRuning" } }')'\",
+">>$storageInfoJson
 #-------------  create map of availiable disks
 	echo " " > $disk_list 
 	for client in "${clients[@]}"; do

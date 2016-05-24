@@ -315,8 +315,8 @@ function hostRescan(){
 }
 
 function removeMdiskGroup(){
-	mdiskid=`ssh -p 26 ${storageInfo[stand_name]} ""lsmdiskgrp |grep -v id | sed -r 's/^[^0-9]*([0-9]+).*$/\1/'""`
-    if [[ $(ssh -p 26 ${storageInfo[stand_name]} lsmdiskgrp -nohdr | wc -l ) < "0" ]] ; then
+	#mdiskid=`ssh -p 26 ${storageInfo[stand_name]} ""lsmdiskgrp |grep -v id | sed -r 's/^[^0-9]*([0-9]+).*$/\1/'""`
+    if [[ $(ssh -p 26 ${storageInfo[stand_name]} lsmdiskgrp -nohdr | wc -l ) > "0" ]] ; then
         if [[ ${log[debug]} =~ "true" ]]; then
     	    logger "debug" "removing mdisk groups from ${storageInfo[stand_name]}"
             logger "debug" "ssh -p 26 ${storageInfo[stand_name]} i=\"0\"; while [ 1 -lt \`lsmdiskgrp -nohdr |wc -l\` ]; do svctask rmmdiskgrp -force \$i; i=\$[\$i+1]; done"

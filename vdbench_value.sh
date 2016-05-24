@@ -17,8 +17,8 @@ mag=$'\e[1;35m'
 cyn=$'\e[1;36m'
 end=$'\e[0m'
 #
-directoryStracture[absPath]="benchmark_results"
-directoryStracture[bas]="benchmark_results"
+#directoryStracture[absPath]="benchmark_results"
+#directoryStracture[bas]="benchmark_results"
 log[timestamp]=$(date +%y%m%d_%H%M%S)
 log[debug]="/tmp/vdbench.benchmark.debug.${log[timestamp]}.log"
 log[verbose]="/tmp/vdbench.benchmark.verbose.${log[timestamp]}.log"
@@ -31,7 +31,7 @@ vdbenchResultsLog[readtest]="read_test_"
 vdbenchResultsLog[out]="out_"
 storageInfo[json]="storageInfo.json"
 
-printf "test time stemp %s\n" ${log[timestamp]}
+#printf "test time stemp %s\n" ${log[timestamp]}
 
 parse_parameter() {
 
@@ -44,10 +44,9 @@ while [[ $# > 1 ]]
 do
     key="${1}"
     shift
-    
-    case "${key}" in
-
-        -vs | --volsize )
+    #echo -e "${key}"
+    case "${key}" in      
+        -vs | -volsize )
             #volsize="$1"
             storageInfo[volsize]="$1"
             shift
@@ -60,7 +59,7 @@ do
             storageInfo[stand_name]="$1"
             shift
             ;;
-        -c | --clients)
+        -c | -clients)
             vdbench_params[clients]="$1"
             shift
             ;;
@@ -69,7 +68,7 @@ do
             vdbench[threads]="$1"
             shift
             ;;
-        -bs | --blocksize )
+        -bs | -blocksize )
             #blocksize=( $1 )
             vdbench[blocksize]=$1
             shift
@@ -77,7 +76,8 @@ do
         -i | --interval )
             #interval="$1"
             vdbench[interval]="$1"
-            shift;;
+            shift
+            ;;
         -rd | --readdata )
             #read_data="$1"
             vdbench[readdata]="$1"
@@ -88,12 +88,12 @@ do
             vdbench[write_data]="$1"
             shift
             ;;
-        -d | --debug )
+        -d | -debug )
             log[debug]="true"
             #debug="true"
             shift
             ;;
-        -v | --verbose )
+        -v | -verbose )
             log[verbose]="true"
             #verbose="true"
             shift
@@ -103,30 +103,40 @@ do
             storageInfo[volsizeunit]="$1"
             shift
             ;;
-        -t | --type )
+        -t | -type )
             #type="$1"
             storageInfo[type]="$1"
             shift
             ;;
-        -vt | --voltype )
+        -vt | -voltype )
             #voltype="$1"
             storageInfo[voltype]="$1"
             shift
             ;;
-        -rt | --raidtype)
+        -rt | -raidtype)
             storageInfo[raidtype]="$1"
+            shift
             ;;
-        -cr | --cmprun )
+        -cr | -cmprun )
             vdbench[cmprun]="$1"
+            shift
             ;;
-        --cleanenv )
+        -cleanenv )
             vdbench_params[cleanenv]="true"
+            shift
             ;;
-        --sleep )
+        -sleep )
             vdbench_params[sleep]="$1"
+            shift
             ;;
-        -r | --dry )
+        -r | -dry )
             log[dry]="true"
+            shift
+            ;;
+        -path )
+            directoryStracture[absPath]="$1"
+            echo "${directoryStracture[absPath]} "
+            shift
             ;;
         --help )
             usage
@@ -172,7 +182,7 @@ echo -e "\
   --mail              send results by mail : <default RTC_SVC>
   --xlsx              create excel file : <default disable>
   --upload            upload json file to par if no errors found
-
+  --path              set results path
  debug info :
   -d | --debug        default false
   -v | --verbose      default false 
@@ -241,6 +251,10 @@ if [[ ! ${log[dry]} ]];then
 	log[dry]="false"
 	#printf "dry mode set only display only output %s\n" ${log[dry]}
 fi
+if  [[ ! ${directoryStracture[absPath]} ]]; then
+    printf " the path did not configured ..... strange !!!!"
+    directoryStracture[absPath]="benchmark_results"
+fi
 if [[ ! ${storageInfo[voltype]} ]];then
 #	storageInfo[voltype]="cmp"
 	storageInfo[voltype]="COMPRESSED"
@@ -258,27 +272,34 @@ fi
 
 print_params() 
 {
-printf "%10s | %1s\n" "vdbench key" "param value"
-	for param  in "${!vdbench_params[@]}"
-	do
-		logger info  "$param:${vdbench_params[$param]}"
-	done
+logger "info" "vdbenchResultsLog array parameters"
+for f in ${!vdbenchResultsLog[@]}; do logger "info" "$f:${vdbenchResultsLog[$f]}" ; done
+logger "info" "directoryStracture array parameters"
+for f in ${!directoryStracture[@]}; do logger "info" "$f:${directoryStracture[$f]}" ; done
+logger "info" "vdbench array parameters"
+for f in ${!vdbench[@]}; do logger "info" "$f:${vdbench[$f]}" ; done
+logger "info" "storageInfo array parameters"
+for f in ${!storageInfo[@]}; do logger "info" "$f:${storageInfo[$f]}" ; done
+logger "info" "vdbenchRelogsultsLog array parameters"
+for f in ${!log[@]}; do logger "info" "$f:${log[$f]}" ; done 
+logger "info" "vdbench_params array parameters"
+for param  in ${!vdbench_params[@]} ; do logger "info" "$param:${vdbench_params[$param]}" ; done
 
 }
 function logger(){
 	type=$1
     ouput=$2
 	if [[ $type == "debug" ]]; then		
-		if [[ ${log[debug]} == "true" ]] ; then printf "[%s] [$red%s  $end] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "DEBUG" "${FUNCNAME[1]}" "$ouput" | tee -a ${log[debug]}; fi
+		if [[ ${log[debug]} == "true" ]] ; then printf "[%s] [$red%s  $end] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "DEBUG" "$red${FUNCNAME[1]}$end" "$ouput" | tee -a ${log[debug]}; fi
 	elif [[ $type == "info" ]] ; then
 		printf "[%s] [$grn%s   $end] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "INFO" "$ouput" | tee -a ${log[info]}
 	elif [[ $type == "error" ]] ; then
-		printf "[%s] [$yel%s     $end] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "ERROR" "${FUNCNAME[1]}" "$ouput" | tee -a ${log[error]}
+		printf "[%s] [$yel%s     $end] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "ERROR" "$red${FUNCNAME[1]}$end" "$ouput" | tee -a ${log[error]}
 	elif [[ $type == "fetal" ]] ; then
 		#printf "[%s] [$red%s$end ] [%s] %s\" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "FETAL" ${FUNCNAME[1]}" "$ouput" | tee -a ${log[error]}
-        printf "[%s] [$red%s  $end] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "FETAL" "${FUNCNAME[1]}" "$ouput" | tee -a ${log[debug]}
+        printf "[%s] [$red%s  $end] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "FETAL" "$red${FUNCNAME[1]}$end" "$ouput" | tee -a ${log[debug]}
 	elif [[ $type == "ver" ]] ; then
-		if [[ ${log[verbose]} == "true" ]] ; then printf "[%s] [$blu%s$end] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "VERBOSE" "${FUNCNAME[1]}" "$ouput" | tee -a ${log[verbose]} ;fi
+		if [[ ${log[verbose]} == "true" ]] ; then printf "[%s] [$blu%s$end] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "VERBOSE" "$red${FUNCNAME[1]}$end" "$ouput" | tee -a ${log[verbose]} ;fi
 	elif [[ ! $type =~ "debug|ver|error|info" ]] ; then
 		printf "[%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "$type" 
 	fi
@@ -299,38 +320,47 @@ function removeStorageHosts() {
 	sleep 2
 }
 function hostRescan(){
-   
+    logger "info" "rescaning hosts vdisk per client ${storageInfo[vdiskPerClient]} "
 	for c in ${vdbench_params[clients]}; do
-        logger "info" "$c host rescanning "
         ssh $c /usr/global/scripts/rescan_all.sh &> ${log[globalLog]}
         hostDeviceCount=`ssh $c multipath -ll|grep -c mpath`
-        logger "info" "vdisk per client ${storageInfo[vdiskPerClient]} , vdisks found : [  $hostDeviceCount ]"
+        logger "info" "[ $c ] vdisks found : [ $hostDeviceCount ]"
 		
 		if [[ ${storageInfo[vdiskPerClient]} -ne $hostDeviceCount || -z $hostDeviceCount ]] ; then 
 			logger "fetal" "!!!!! ERROR | unbalanced devices on host $red$c$end | device count [ $red$hostDeviceCount$end ] | ERROR !!!!!" 
 			exit
 		fi
     done
-    exit
+    
 }
 
 function removeMdiskGroup(){
-	#mdiskid=`ssh -p 26 ${storageInfo[stand_name]} ""lsmdiskgrp |grep -v id | sed -r 's/^[^0-9]*([0-9]+).*$/\1/'""`
-    if [[ $(ssh -p 26 ${storageInfo[stand_name]} lsmdiskgrp -nohdr | wc -l ) > "0" ]] ; then
+    declare -a mdiskgrp
+	mdiskgrp=`ssh -p 26 ${storageInfo[stand_name]} ""lsmdiskgrp |grep -v id | sed -r 's/^[^0-9]*([0-9]+).*$/\1/'""`
+    if [[ ${#mdiskgrp[@]} > "0" && ! -z ${mdiskgrp[@]} ]] ; then
         if [[ ${log[debug]} =~ "true" ]]; then
-    	    logger "debug" "removing mdisk groups from ${storageInfo[stand_name]}"
-            logger "debug" "ssh -p 26 ${storageInfo[stand_name]} i=\"0\"; while [ 1 -lt \`lsmdiskgrp -nohdr |wc -l\` ]; do svctask rmmdiskgrp -force \$i; i=\$[\$i+1]; done"
-        elif [[ ${log[verbose]} == "true" ]]; then
+    	    logger "debug" "removing mdisk groups from ${storageInfo[stand_name]} with groups id ${mdiskgrp[@]}"
+            logger "debug" "ssh -p 26 ${storageInfo[stand_name]} ""lsmdiskgrp |grep -v id | sed -r 's/^[^0-9]*([0-9]+).*$/\1/'"""
+        
+        elif [[ ${log[verbose]} == "true" ]]; then            
             logger "ver" "removing mdisk groups from ${storageInfo[stand_name]}"
-    		logger "ver" "command| ssh -p 26 ${storageInfo[stand_name]} i=\"0\"; while [ 1 -lt \`lsmdiskgrp -nohdr |wc -l\` ]; do svctask rmmdiskgrp -force \$i; i=\$[\$i+1]; done"
-            #ssh -p 26 ${storageInfo[stand_name]} ${storageInfo[mkMasterArray]} &> ${log[globalLog]}
-            ssh -p 26 ${storageInfo[stand_name]} "i=\"0\"; while [ 1 -lt \`lsmdiskgrp -nohdr |wc -l\` ]; do svctask rmmdiskgrp -force \$i; i=\$[\$i+1]; done"
+    		logger "ver" "command|ssh -p 26 ${storageInfo[stand_name]} ""lsmdiskgrp |grep -v id | sed -r 's/^[^0-9]*([0-9]+).*$/\1/'"""
+            for mdiskgrpID in ${mdiskgrp[@]} ; do
+                logger "info" "removing mdiskgroup ${mdiskgrpID}"
+                ssh -p 26 ${storageInfo[stand_name]} "svctask rmmdiskgrp -force $mdiskgrpID"
+            done
         else
+            mdiskgrp=$(ssh -p 26 ${storageInfo[stand_name]} "mdiskgrp=( \$(lsmdiskgrp -nohdr | awk '{print \$1}' | xargs ))")
             logger "info" "removing mdisk groups from ${storageInfo[stand_name]}"
-            ssh -p 26 ${storageInfo[stand_name]} "i=\"0\"; while [ 1 -lt \`lsmdiskgrp -nohdr |wc -l\` ]; do svctask rmmdiskgrp -force \$i; i=\$[\$i+1]; done"
-            #ssh -p 26 ${storageInfo[stand_name]} ${storageInfo[mkMasterArray]} &> ${log[globalLog]}
+            logger "info" "total mdiskgroups ${#mdiskgrp[@]}"
+            for mdiskgrpID in ${mdiskgrp[@]} ; do
+                logger "info" "removing mdiskgroup ${mdiskgrpID}"
+                ssh -p 26 ${storageInfo[stand_name]} "svctask rmmdiskgrp -force $mdiskgrpID"
+            done
         fi
-    fi
+    else
+        logger "info" "[ $blu${storageInfo[stand_name]}$end ] no mdisk groups to remove from the system" ;
+    fi    
 }
 
 function createHosts() {
@@ -339,17 +369,18 @@ storageInfo[hostCount]=0
 logger "info" "Creating hosts ${clients[@]}"
 
 totalFC=0
+declare -a hostStorage
 for c in ${vdbench_params[clients]}
 do
 	storageInfo[hostCount]=$(( storageInfo[hostCount] + 1 ))
     wwpn=`ssh $c /usr/global/scripts/qla_show_wwpn.sh | grep Up | awk '{print $1}' | tr "\n" ":"| sed -e 's|\:$||g'`
     wwpnHostCount=`ssh $c /usr/global/scripts/qla_show_wwpn.sh | grep -c Up `
-    totalFC=$((  totalFC + $wwpnHostCount ))
-    logger "info" "adding host $c " 
-    logger "ver" "  Host wwpn $wwpn" 
-    logger "debug" "  COMMAND \"ssh -p 26 ${storageInfo[stand_name]} svctask mkhost -fcwwpn $wwpn -force -iogrp io_grp0:io_grp1:io_grp2:io_grp3 -name $c -type generic 2>/dev/null\""
-
-    ssh ${storageInfo[stand_name]} -p 26 svctask mkhost -fcwwpn $wwpn  -force -iogrp io_grp0:io_grp1:io_grp2:io_grp3 -name $c -type generic &>/dev/null
+    totalFC=$(( totalFC + $wwpnHostCount ))
+    logger "info"  "Adding host $c " 
+    logger "ver"   " Host wwpn $wwpn" 
+    logger "debug" " COMMAND \"ssh -p 26 ${storageInfo[stand_name]} svctask mkhost -fcwwpn $wwpn -force -iogrp io_grp0:io_grp1:io_grp2:io_grp3 -name $c -type generic 2>/dev/null\""
+    
+    ssh -p 26 ${storageInfo[stand_name]} svctask mkhost -fcwwpn $wwpn  -force -iogrp io_grp0:io_grp1:io_grp2:io_grp3 -name $c -type generic &>/dev/null
 done
 if [ $(( ${storageInfo[volnum]} % ${storageInfo[hostCount]} )) -ne "0" ]  ; then
     logger "fetal" "total volumes [ ${storageInfo[volnum]} ] is not devide with host count  [ ${storageInfo[hostCount]} ] " 
@@ -392,7 +423,6 @@ function getStorageInfo(){
 		storageInfo[backend]=$( ssh stcon "/opt/FCCon/fcconnect.pl -op showconn -stor ${storageInfo[stand_name]} | grep Storage | awk '{print \$3}'" )
 		logger "ver" "svc|backend|output|${storageInfo[backend]}"
 	fi
-
 }
 
 function getStorageVolumes(){
@@ -406,8 +436,7 @@ function getStorageVolumes(){
 }
 
 function vdbenchDirectoryResutls() {
-	results_path="vdbench_benchmark_test"
-
+	
 	log[resultsPath]="${directoryStracture[absPath]}/${storageInfo[svcBuild]}/${storageInfo[svcVersion]}/${log[timestamp]}/$bs"
 	logger "ver" "results path        : [ ${log[resultsPath]} ]"
 	createDirectory ${log[resultsPath]}
@@ -427,7 +456,7 @@ function vdbenchDirectoryResutls() {
 
 function vdbenchMainDirectoryCreation(){
 
-	directoryStracture[absPath]="benchmark_results"
+	#directoryStracture[absPath]="benchmark_results"
 	logger "ver" "absulte path        : [ ${directoryStracture[absPath]} ]"
 	createDirectory ${directoryStracture[absPath]}
 
@@ -469,7 +498,8 @@ function vdbenchResultsFiles() {
 
 function createStorageVolumes(){
 
-removeMdiskGroup()
+removeMdiskGroup
+logger "info" "Creating Storage Volumes on ${storageInfo[stand_name]}"
 
 if [[ ${storageInfo[hardware]} =~ "T5H" || ${storageInfo[hardware]} =~ "500" ]]; then
     storageInfo[mkMasterArray]="/home/mk_arrays_master fc ${storageInfo[raidType]} sas_hdd "
@@ -487,7 +517,7 @@ if [[ ${storageInfo[hardware]} =~ "T5H" || ${storageInfo[hardware]} =~ "500" ]];
 		logger "ver" "command| ssh -p 26 ${storageInfo[stand_name]} ${storageInfo[mkMasterArray]}"
         ssh -p 26 ${storageInfo[stand_name]} ${storageInfo[mkMasterArray]} &> ${log[globalLog]}
     else
-        logger "info" "Creating volumes on ${storageInfo[stand_name]}"
+        logger "info" "Start Creating volumes on ${storageInfo[stand_name]}"
         ssh -p 26 ${storageInfo[stand_name]} ${storageInfo[mkMasterArray]} &> ${log[globalLog]}
     fi
 elif [[ ${storageInfo[hardware]} =~ "DH8" || ${storageInfo[hardware]} =~ "CG8" ]]; then
@@ -504,7 +534,7 @@ elif [[ ${storageInfo[hardware]} =~ "DH8" || ${storageInfo[hardware]} =~ "CG8" ]
         #ssh -p 26 ${storageInfo[stand_name]}  /home/mk_vdisks fc 1 ${storageInfo[volnum]} ${storageInfo[volsize]} 0 NOFMT COMPRESSED AUTOEXP &> ${log[globalLog]}
         ssh -p 26 ${storageInfo[stand_name]} ${storageInfo[mkVdisk]} &> ${log[globalLog]}
     else
-        logger "info" "Creating volumes on ${storageInfo[stand_name]}"     
+        logger "info" "Start Creating volumes on ${storageInfo[stand_name]}"     
         ssh -p 26 ${storageInfo[stand_name]} ${storageInfo[mkVdisk]} &> ${log[globalLog]}
         #ssh ${storageInfo[stand_name]} -p 26 /home/mk_vdisks fc 1 ${storageInfo[volnum]} ${storageInfo[volsize]} 0 NOFMT COMPRESSED AUTOEXP &> ${log[globalLog]}
     fi    
@@ -518,19 +548,29 @@ function vdbenchDeviceList() {
 echo " " > ${vdbench[disk_list]}
 
 for client in ${vdbench_params[clients]}; do
+declare -a hostDeviceSize 
+hostDeviceSize=$( ssh $client multipath -l | grep size | sed -e 's/ .*//g' -e 's/.*=//g'| uniq )
+
+logger "ver" "vdbench sd output: ${hostDeviceSize[0]} - ${#hostDeviceSize[@]} " 
+if [ ${#hostDeviceSize[@]} -gt "1" ]; then 
+    logger "fetal" "!!!!! ERROR | unbalanced devices size on host $red$client$end | device count [ $red$hostDeviceSize$end ] | ERROR !!!!!"
+    exit
+fi
+
+
 count=1
 	for dev in `ssh $client multipath -l|grep "2145" | awk '{print \$1}'`; do
     	device="/dev/mapper/$dev"
     	if [[ ${log[debug]} == "true" ]]; then
-            logger "debug" "vdbench sd output: sd=$client.$count,hd=$client,lun=$device,openflags=o_direct,size=${storageInfo[volsize]},threads=${vdbench[threads]}"
+            logger "debug" "vdbench sd output: sd=$client.$count,hd=$client,lun=$device,openflags=o_direct,size=${hostDeviceSize[0]},threads=${vdbench[threads]}"
             count=$(( count+1  ))
     	elif [[ ${log[verbose]} == "true" ]]; then
-            logger "ver" "vdbench sd output: sd=$client.$count,hd=$client,lun=$device,openflags=o_direct,size=${storageInfo[volsize]},threads=${vdbench[threads]}"
-            echo  "sd=$client.$count,hd=$client,lun=$device,openflags=o_direct,size=${storageInfo[volsize]},threads=${vdbench[threads]}" >> ${vdbench[disk_list]}
+            logger "ver" "vdbench sd output: sd=$client.$count,hd=$client,lun=$device,openflags=o_direct,size=${hostDeviceSize[0]},threads=${vdbench[threads]}"
+            echo  "sd=$client.$count,hd=$client,lun=$device,openflags=o_direct,size=${hostDeviceSize[0]},threads=${vdbench[threads]}" >> ${vdbench[disk_list]}
             count=$(( count+1  ))
         else
-            echo  "sd=$client.$count,hd=$client,lun=$device,openflags=o_direct,size=${storageInfo[volsize]},threads=${vdbench[threads]}" >> ${vdbench[disk_list]}
-       Count     count=$(( count+1  ))
+            echo  "sd=$client.$count,hd=$client,lun=$device,openflags=o_direct,size=${hostDeviceSize[0]},threads=${vdbench[threads]}" >> ${vdbench[disk_list]}
+            count=$(( count+1  ))
         fi
     done
 done
@@ -566,8 +606,18 @@ rd=run1,wd=wd1,iorate=max,elapsed=24h,maxdata=${vdbench[write_data]},warmup=360,
 	elif [[ ${log[verbose]} == "true" ]]; then
         logger "ver" "./vdbench -c -f ${vdbench[write_test]} -o ${log[test_data]}/output_$CP | tee -a ${log[output_file]}"
         `./vdbench -c -f ${vdbench[write_test]} -o ${log[test_data]}/output_$CP | tee -a ${log[output_file]}`
+        echo "======================================= exit status " $?
+        if [[ $? -eq "127" ]]; then
+            logger "fetal" "!!!!! ERROR | vdbench failed to run write operation | ERROR !!!!!"
+            exit
+        fi
     else
         `./vdbench -c -f ${vdbench[write_test]} -o ${log[test_data]}/output_$CP >> ${log[output_file]}`
+        echo "======================================= exit status " $?
+        if [[ $? -eq "127" ]]; then
+            logger "fetal" "!!!!! ERROR | vdbench failed to run write operation | ERROR !!!!!"
+            exit
+        fi
     fi
 }
 
@@ -602,8 +652,16 @@ rd=run1,wd=wd1,iorate=max,elapsed=24h,maxdata=${vdbench[read_data]},warmup=360,i
 	elif [[ ${log[verbose]} == "true" ]]; then
         logger "ver" "./vbench -c -f ${vdbench[read_test]} -o ${log[test_data]}/output_$CP | tee -a ${log[output_file]}"
         `./vdbench -c -f ${vdbench[read_test]} -o ${log[test_data]}/output_$CP | tee -a ${log[output_file]}`
+        if [[ $? -eq "1" ]]; then
+            logger "fetal" "!!!!! ERROR | vdbench failed to run read operation | ERROR !!!!!"
+            exit
+        fi
     else
         `./vdbench -c -f ${vdbench[read_test]} -o ${log[test_data]}/output_$CP >> ${log[output_file]}`
+        if [[ $? -eq "1" ]]; then
+            logger "fetal" "!!!!! ERROR | vdbench failed to run read operation | ERROR !!!!!"
+            exit
+        fi
     fi
 }
 
@@ -622,16 +680,17 @@ checking_params
 if [[ ${log[debug]} == "true" ]]  ; then print_params ; fi
 getStorageInfo
 vdbenchMainDirectoryCreation
-removeStorageHosts
-removeMdiskGroup
-createHosts
+#removeStorageHosts
+#removeMdiskGroup
+#createHosts
 
 for bs in ${vdbench[blocksize]}; do
 	log[testCount]=1
-	createStorageVolumes	
+#	createStorageVolumes
+    #logger "info" "exit after function : createStorageVolumes" ; exit
 	getStorageVolumes
 	vdbenchDirectoryResutls
-	hostRescan
+	#hostRescan
 	for CP in ${vdbench[cmprun]} ; do
 		logger "info" "===[ ${log[testCount]} ]===[ blocksize | $bs ]====[ RATIO | $CP ]=============================================="
 		vdbenchResultsFiles

@@ -15,7 +15,7 @@ interval=3
 vol_num=128
 
 debug_verbose="false"
-
+raceMQvalue="0"
 comp_ratio=( "1.3" "1.7" "2.3" "3.5" "11" )
 #comp_ratio=( "2.3" "3.5" "11" )
 #comp_ratio=( "3.5" )
@@ -103,7 +103,7 @@ echo "
         \"ClientsNum\":           \"${#clients[@]}\",
         \"ThreadsPerClient\": 	  \"$threads\",
         \"LunPerClient\":         \"$(( $vol_num / ${#clients[@]} ))\",
-        \"FCperClient\":          \"$(( $totalFC / ${#clients[@]} ))\"
+        \"FCperClient\":          \"$(( $totalFC / ${#clients[@]} ))\",
 
 " > $storageInfoJson
 
@@ -150,13 +150,13 @@ verbose output        : [ $debug_verbose ]
 	ssh $1 -p 26 svctask rmmdiskgrp -force $mdiskid
 
 	hardwareType=`ssh $1 -p 26 sainfo lshardware | grep hardware | awk '{print \$2}'`
-	ssh $1 -p 26 ls /home/mk_arrays_master >/dev/null
+	ssh $1 -p 26 "ls /home/mk_arrays_master" 2>&- >/dev/null
 	if [[ $? == 0 ]]; then
 #         ssh -p 26 $1 /home/mk_arrays_master fc raid5 sas_hdd 238 8 32 128 400 COMPRESSED NOFMT AUTOEXP >/dev/null
         array_drive=8
         number_of_drive=$(ssh -p 26 $1 lsdrive -nohdr | wc -l)
         number_of_mdisk_group=$(( $number_of_drive / $array_drive ))
-	vol_size=488
+	    vol_size=488
       	if [[ $debug_verbose =~ "true" ]]; then
 	    echo "Running with FAB configuration with ouput"
             ssh -p 26 $1 /home/mk_arrays_master fc raid10 sas_hdd $number_of_drive $array_drive $number_of_mdisk_group $vol_num $vol_size COMPRESSED NOFMT NOSCRUB | tee -a  $rpath/$test_info
@@ -185,11 +185,22 @@ verbose output        : [ $debug_verbose ]
 
 
 
-
-echo "
-        \"RaceMQVersion\":        \"$(ssh -p 26 $1 /data/race/rtc_racemqd -v | grep race | awk '{print $2}')\",
-        \"MultiRace\":            \"$(ssh -p 26 $1 ps -efL | grep race | awk '$10 ~ /racemqAd/ { racemqAd++ } $10 ~ /racemqAd/ { racemqBd++ } END { if( racemqAd > 1 && racemqBd > 1 ) { print racemqAd" "racemqBd } else if ( rtc_racemqd > 1 ) { print "1" } else if ( racemqAd < 1 && racemqBd < 1 && rtc_racemqd < 1 ) { print "noRaceRuning" } }')'\",
+if [ $raceMQvalue -eq "0" ] ; then 
+echo " \"RaceMQVersion\":        \"$(ssh -p 26 $stg /data/race/rtc_racemqd -v | grep race | awk '{print $2}' | sed -e 's/v//g')\",
+       \"MultiRace\":            \"$(ssh -p 26 $stg ps -efL | grep race | awk '$10 ~ /racemqAd/ { rAd++ } 
+																		$10 ~ /racemqBd/ { rBd++ } 
+																		$10 ~ /rtc_racemqd/ { rtc_rqd++ } 
+				END { \
+				     
+ 					if ( rAd > 2 && rBd > 2  ) { print "2" } \
+					else if ( rAd > 2  && rBd < 2 ) { print "1" } \
+					else if ( rtc_rqd > 12 ) { print "1" } \
+					else if ( rAd < 1 && rBd < 1 && rtc_rqd < 1 ) { print "noRaceRuning" } 
+				}')\",
+'\",
 ">>$storageInfoJson
+   raceMQvalue="1"
+fi 
 #-------------  create map of availiable disks
 	echo " " > $disk_list 
 	for client in "${clients[@]}"; do

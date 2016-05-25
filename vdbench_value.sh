@@ -272,18 +272,18 @@ fi
 
 print_params() 
 {
-logger "info" "vdbenchResultsLog array parameters"
-for f in ${!vdbenchResultsLog[@]}; do logger "info" "$f:${vdbenchResultsLog[$f]}" ; done
+logger "info" "==[ vdbenchResultsLog ]==[ array parameters ]=========="
+for f in ${!vdbenchResultsLog[@]}; do logger "info" "   $f |${vdbenchResultsLog[$f]}" ; done
 logger "info" "directoryStracture array parameters"
-for f in ${!directoryStracture[@]}; do logger "info" "$f:${directoryStracture[$f]}" ; done
+for f in ${!directoryStracture[@]}; do logger "info" "  $f |${directoryStracture[$f]}" ; done
 logger "info" "vdbench array parameters"
-for f in ${!vdbench[@]}; do logger "info" "$f:${vdbench[$f]}" ; done
+for f in ${!vdbench[@]}; do logger "info" " $f |${vdbench[$f]}" ; done
 logger "info" "storageInfo array parameters"
-for f in ${!storageInfo[@]}; do logger "info" "$f:${storageInfo[$f]}" ; done
+for f in ${!storageInfo[@]}; do logger "info" "$f |${storageInfo[$f]}" ; done
 logger "info" "vdbenchRelogsultsLog array parameters"
-for f in ${!log[@]}; do logger "info" "$f:${log[$f]}" ; done 
+for f in ${!log[@]}; do logger "info" " $f |${log[$f]}" ; done 
 logger "info" "vdbench_params array parameters"
-for param  in ${!vdbench_params[@]} ; do logger "info" "$param:${vdbench_params[$param]}" ; done
+for param  in ${!vdbench_params[@]} ; do logger "info" "    $param |${vdbench_params[$param]}" ; done
 
 }
 function logger(){
@@ -604,16 +604,16 @@ rd=run1,wd=wd1,iorate=max,elapsed=24h,maxdata=${vdbench[write_data]},warmup=360,
         logger "debug" "log output file ${log[output_file]}"
         logger "debug" "./vdbench -c -f ${vdbench[write_test]} -o ${log[test_data]}/output_$CP | tee -a ${log[output_file]}"
 	elif [[ ${log[verbose]} == "true" ]]; then
-        logger "ver" "./vdbench -c -f ${vdbench[write_test]} -o ${log[test_data]}/output_$CP | tee -a ${log[output_file]}"
+        logger "info" "running write benchmark"
+        logger "ver" "./vdbench -c -f ${vdbench[write_test]} -o ${log[test_data]}/output_$CP | tee -a ${log[output_file]}"     
         `./vdbench -c -f ${vdbench[write_test]} -o ${log[test_data]}/output_$CP | tee -a ${log[output_file]}`
-        echo "======================================= exit status " $?
         if [[ $? -eq "127" ]]; then
             logger "fetal" "!!!!! ERROR | vdbench failed to run write operation | ERROR !!!!!"
             exit
         fi
     else
+        logger "info" "running write benchmark"
         `./vdbench -c -f ${vdbench[write_test]} -o ${log[test_data]}/output_$CP >> ${log[output_file]}`
-        echo "======================================= exit status " $?
         if [[ $? -eq "127" ]]; then
             logger "fetal" "!!!!! ERROR | vdbench failed to run write operation | ERROR !!!!!"
             exit
@@ -646,30 +646,37 @@ rd=run1,wd=wd1,iorate=max,elapsed=24h,maxdata=${vdbench[read_data]},warmup=360,i
 " >> ${vdbench[read_test]}
 
     if [[ ${log[debug]} == 'true' ]];then
-        logger "debug" "log output file ${log[output_file]}"
+        logger "debug" "executing read benchmark log output file ${log[output_file]}"
         logger "debug" "./vdbench -c -f ${vdbench[read_test]} -o ${log[test_data]}/output_$CP | tee -a ${log[output_file]}"
 
 	elif [[ ${log[verbose]} == "true" ]]; then
         logger "ver" "./vbench -c -f ${vdbench[read_test]} -o ${log[test_data]}/output_$CP | tee -a ${log[output_file]}"
         `./vdbench -c -f ${vdbench[read_test]} -o ${log[test_data]}/output_$CP | tee -a ${log[output_file]}`
-        if [[ $? -eq "1" ]]; then
+        if [[ $? -eq "127" ]]; then
             logger "fetal" "!!!!! ERROR | vdbench failed to run read operation | ERROR !!!!!"
             exit
         fi
     else
+        logger "info" "running read benchmark"
         `./vdbench -c -f ${vdbench[read_test]} -o ${log[test_data]}/output_$CP >> ${log[output_file]}`
-        if [[ $? -eq "1" ]]; then
+        if [[ $? -eq "127" ]]; then
             logger "fetal" "!!!!! ERROR | vdbench failed to run read operation | ERROR !!!!!"
             exit
         fi
     fi
 }
-
+function displayVdbenchResults() {
+        path=/benchmark_results/7.6.1.1/124.4.1603211401000/160523_094004/64k/
+        ${log[output_file]}
+    
+    
+}
 #function _info(){ echo }
 #function _error(){ echo }
 #function _verbose(){ echo }
 #function _debug(){ echo }
 ###
+
 # function jsonFile
 # function storageInfo
 # function createTestFile()

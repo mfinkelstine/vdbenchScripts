@@ -1,13 +1,17 @@
 #!/bin/bash
 WRITE="write_test_"
 READ="read_test_"
+# 
+# declaration satge:
+#
 declare -A vdbench_params
 declare -A log
 declare -A directoryStracture
 declare -A vdbenchResultsLog
 declare -A vdbench
 declare -A storageInfo
-
+declare -A compressionRatio=( [1.3]="30" [1.7]="50"  [2.3]="65" [3.5]="75" [11]="92" )
+declare -A vdbenchResults
 # color shcames
 red=$'\e[1;31m'
 grn=$'\e[1;32m'
@@ -135,7 +139,7 @@ do
             ;;
         -path )
             directoryStracture[absPath]="$1"
-            echo "${directoryStracture[absPath]} "
+            #echo "${directoryStracture[absPath]} "
             shift
             ;;
         --help )
@@ -252,7 +256,7 @@ if [[ ! ${log[dry]} ]];then
 	#printf "dry mode set only display only output %s\n" ${log[dry]}
 fi
 if  [[ ! ${directoryStracture[absPath]} ]]; then
-    printf " the path did not configured ..... strange !!!!"
+    #printf " the path did not configured ..... strange !!!!"
     directoryStracture[absPath]="benchmark_results"
 fi
 if [[ ! ${storageInfo[voltype]} ]];then
@@ -289,20 +293,26 @@ for param  in ${!vdbench_params[@]} ; do logger "info" "    $param |${vdbench_pa
 function logger(){
 	type=$1
     ouput=$2
+    o1=""
+    o2=""
 	if [[ $type == "debug" ]]; then		
 		if [[ ${log[debug]} == "true" ]] ; then printf "[%s] [$red%s  $end] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "DEBUG" "$red${FUNCNAME[1]}$end" "$ouput" | tee -a ${log[debug]}; fi
 	elif [[ $type == "info" ]] ; then
 		printf "[%s] [$grn%s   $end] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "INFO" "$ouput" | tee -a ${log[info]}
 	elif [[ $type == "error" ]] ; then
 		printf "[%s] [$yel%s     $end] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "ERROR" "$red${FUNCNAME[1]}$end" "$ouput" | tee -a ${log[error]}
-	elif [[ $type == "fetal" ]] ; then
-		#printf "[%s] [$red%s$end ] [%s] %s\" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "FETAL" ${FUNCNAME[1]}" "$ouput" | tee -a ${log[error]}
+	elif [[ $type == "fetal" ]] ; then	
         printf "[%s] [$red%s  $end] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "FETAL" "$red${FUNCNAME[1]}$end" "$ouput" | tee -a ${log[debug]}
 	elif [[ $type == "ver" ]] ; then
 		if [[ ${log[verbose]} == "true" ]] ; then printf "[%s] [$blu%s$end] [%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "VERBOSE" "$red${FUNCNAME[1]}$end" "$ouput" | tee -a ${log[verbose]} ;fi
-	elif [[ ! $type =~ "debug|ver|error|info" ]] ; then
-		printf "[%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "$type" 
-	fi
+    elif [[ $type == "results" ]]; then 
+        typo=`echo ${type^^}`
+        o1=`echo ${ouput%;*}`
+        o2=`echo ${ouput#*;}`
+        printf "[%s] [$grn%s$end] %15s %s25\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "$typo" "$o1" "$o2" | tee -a ${log[info]}
+	elif [[ ! $type =~ "debug|ver|error|info|results" ]] ; then
+		printf "[%s] %s\n" "`date '+%d/%m/%y %H:%M:%S:%2N'`" "$type" 	
+    fi
 
 }
 function debug(){
@@ -332,6 +342,10 @@ function hostRescan(){
 		fi
     done
     
+}
+function converCompretionRatio() {
+	local cmp=$1	
+	printf "%s" ${compressionRatio[$cmp]}	
 }
 
 function removeMdiskGroup(){
@@ -437,37 +451,122 @@ function getStorageVolumes(){
 
 function vdbenchDirectoryResutls() {
 	
-	log[resultsPath]="${directoryStracture[absPath]}/${storageInfo[svcBuild]}/${storageInfo[svcVersion]}/${log[timestamp]}/$bs"
-	logger "ver" "results path        : [ ${log[resultsPath]} ]"
-	createDirectory ${log[resultsPath]}
-
-	log[test_results]="${log[resultsPath]}/test_results"
-	logger "ver" "test results path   : [ ${log[test_results]} ]"
-    createDirectory ${log[test_results]}
-
-	log[test_files]="${log[resultsPath]}/test_files"
-	logger "ver" "test files path     : [ ${log[test_files]} ]"
-    createDirectory ${log[test_files]}
-
-	log[test_data]="${log[resultsPath]}/output_data"
-	logger "ver" "test data path      : [ ${log[test_data]} ]"
-    createDirectory ${log[test_data]}
+	if [ -n "${directoryStracture[absPath]}" ] ; then
+        log[resultsPath]="${directoryStracture[absPath]}/$bs"
+	    logger "ver" "results path        : [ ${log[resultsPath]} ]"
+	    createDirectory ${log[resultsPath]}
+    
+	    log[test_results]="${log[resultsPath]}/test_results"
+	    logger "ver" "test results path   : [ ${log[test_results]} ]"
+        createDirectory ${log[test_results]}
+    
+	    log[test_files]="${log[resultsPath]}/test_files"
+	    logger "ver" "test files path     : [ ${log[test_files]} ]"
+        createDirectory ${log[test_files]}
+    
+	    log[test_data]="${log[resultsPath]}/output_data"
+	    logger "ver" "test data path      : [ ${log[test_data]} ]"
+        createDirectory ${log[test_data]}
+    else
+        log[resultsPath]="${directoryStracture[absPath]}/${storageInfo[svcBuild]}/${storageInfo[svcVersion]}/${log[timestamp]}/$bs"
+	    logger "ver" "results path        : [ ${log[resultsPath]} ]"
+	    createDirectory ${log[resultsPath]}
+    
+	    log[test_results]="${log[resultsPath]}/test_results"
+	    logger "ver" "test results path   : [ ${log[test_results]} ]"
+        createDirectory ${log[test_results]}
+    
+	    log[test_files]="${log[resultsPath]}/test_files"
+	    logger "ver" "test files path     : [ ${log[test_files]} ]"
+        createDirectory ${log[test_files]}
+    
+	    log[test_data]="${log[resultsPath]}/output_data"
+	    logger "ver" "test data path      : [ ${log[test_data]} ]"
+        createDirectory ${log[test_data]}
+    fi
 }
 
 function vdbenchMainDirectoryCreation(){
 
+    if [ -n "${directoryStracture[absPath]}" ] ; then 
+    	#logger "ver" "absulte path        : [ ${directoryStracture[absPath]} ]"
+	    #createDirectory ${directoryStracture[absPath]}
+
+	    log[logPath]="${directoryStracture[absPath]}"
+	    logger "ver" "results path        : [ ${log[logPath]} ]"
+	    createDirectory ${log[logPath]}
+
+	    log[globalLog]="${log[logPath]}/${log[logOutput]}"
+	    logger "ver" "globalLog file        : [ ${log[globalLog]} ]"
+    else
 	#directoryStracture[absPath]="benchmark_results"
-	logger "ver" "absulte path        : [ ${directoryStracture[absPath]} ]"
-	createDirectory ${directoryStracture[absPath]}
+	    logger "ver" "absulte path        : [ ${directoryStracture[absPath]} ]"
+	    createDirectory ${directoryStracture[absPath]}
 
-	log[logPath]="${directoryStracture[absPath]}/${storageInfo[svcBuild]}/${storageInfo[svcVersion]}/${log[timestamp]}"
-	logger "ver" "results path        : [ ${log[logPath]} ]"
-	createDirectory ${log[logPath]}
+	    log[logPath]="${directoryStracture[absPath]}/${storageInfo[svcBuild]}/${storageInfo[svcVersion]}/${log[timestamp]}"
+	    logger "ver" "results path        : [ ${log[logPath]} ]"
+	    createDirectory ${log[logPath]}
 
-	log[globalLog]="${log[logPath]}/${log[logOutput]}"
-	logger "ver" "globalLog file        : [ ${log[globalLog]} ]"
+	    log[globalLog]="${log[logPath]}/${log[logOutput]}"
+	    logger "ver" "globalLog file        : [ ${log[globalLog]} ]"
+    
+    fi
+}
+function getvdbenchResults () {
+	local testType=$1
+	local cmp=$2
+	ratio=$(converCompretionRatio $cmp)
+    #logger "info" "compression ratio $ratio"
+	stresults=$testType"_"$ratio"_"
+	#May 29, 2016  interval        i/o   MB/sec   bytes   read     resp     read    write     resp     resp queue  cpu%  cpu%
+    #                             rate  1024**2     i/o    pct     time     resp     resp      max   stddev depth sys+u   sys
+	#13:38:41.062       331   13940.00  3485.00  262144   0.00   36.022    0.000   36.022   61.392    3.935 502.3   NaN   NaN
+	if [ -f ${log[output_file]} ]; then
+        logger "debug" "output results ${log[output_file]}"
+		if [[ $testType == "write" ]] ; then
+			st=$(cat ${log[output_file]} | egrep "Starting RD|avg_" | head -1)
+			et=$(cat ${log[output_file]} | egrep "Starting RD|avg_" | head -2 | tail -1)
+			writeStartTime=$(echo $st | sed -e 's/\..*//g')
+			writeEndTime=$(echo $et | sed -e 's/\..*//g')
+			declare -a writeTestResults=($(cat ${log[output_file]} | egrep "Starting RD|avg_" | head -2 | tail -1 | awk '{print $2" "$3" "$8 " "$9 }'))
+			vdbenchResults["$stresults""iops"]="${writeTestResults[0]}"
+			vdbenchResults["$stresults""mb"]="${writeTestResults[1]}" #MB throughut
+			vdbenchResults["$stresults""rr"]="${writeTestResults[2]}" #read response
+			vdbenchResults["$stresults""wr"]="${writeTestResults[3]}" #write response
+			vdbenchResults["$stresults""startTest"]="${writeStartTime}"
+			vdbenchResults["$stresults""endTest"]="${writeEndTime}"
+            if [[ ${log[verbose]} == "true" ]]; then displayvdbehcnResults $stresults ; fi
+            logger "info" "[RESULTS]$blu testType$end:$yel$testType$end ratio:$ratio |iops:${vdbenchResults[$stresults"iops"]} |throughut:${vdbenchResults[$stresults"mb"]}"
+
+		elif [[ $testType == "read" ]]; then
+			st=$(cat ${log[output_file]} | egrep "Starting RD|avg_" | tail -2 | head -1|sed -e 's/\..*//g')
+			et=$(cat ${log[output_file]} | egrep "Starting RD|avg_" | tail -1 | sed -e 's/\..*//g')
+			#printf "%10s %10s\n" $st $et
+			declare -a readTestResults=($(cat ${log[output_file]} | egrep "Starting RD|avg_" | head -2 | tail -1 | awk '{print $2" "$3" "$8 " "$9 }'))		
+			results=$(cat ${log[output_file]} | grep -B1 avg| tail -2)
+			vdbenchResults["$stresults""iops"]="${readTestResults[0]}"
+			vdbenchResults["$stresults""mb"]="${readTestResults[1]}"
+			vdbenchResults["$stresults""rr"]="${readTestResults[2]}"
+			vdbenchResults["$stresults""wr"]="${readTestResults[3]}"
+			vdbenchResults["$stresults""startTest"]="${st}"
+			vdbenchResults["$stresults""endTest"]="${et}"
+            if [[ ${log[verbose]} == "true" ]]; then displayvdbehcnResults $stresults ; fi
+            logger "info" "[RESULTS]$blu testType$end:$red$testType$end ratio:$ratio |iops:${vdbenchResults[$stresults"iops"]} |throughut:${vdbenchResults[$stresults"mb"]}"
+		fi
+	else
+		logger "info" "output results does not exist${log[output_file]}"
+	fi
 }
 
+function displayvdbehcnResults () {
+	local typeResults=$1
+	local compressionRatio=$2
+    declare -A vr=( ["iops"]="i/o rate" ["mb"]="MB/sec" ["rr"]="read resp" ["wr"]="write resp" ["startTest"]="start test" ["endTest"]="end test"  )	
+	#printf "%s\n" "function name     : ${FUNCNAME[0]}"
+	for v in ${!vr[@]}; do
+        logger "results" "${vr[$v]};${vdbenchResults[$typeResults$v]}"
+	done	
+}
 function createDirectory() {
 	directoryPath=$1
 	if [ ! -d $directoryPath ] ; then
@@ -536,7 +635,6 @@ elif [[ ${storageInfo[hardware]} =~ "DH8" || ${storageInfo[hardware]} =~ "CG8" ]
     else
         logger "info" "Start Creating volumes on ${storageInfo[stand_name]}"     
         ssh -p 26 ${storageInfo[stand_name]} ${storageInfo[mkVdisk]} &> ${log[globalLog]}
-        #ssh ${storageInfo[stand_name]} -p 26 /home/mk_vdisks fc 1 ${storageInfo[volnum]} ${storageInfo[volsize]} 0 NOFMT COMPRESSED AUTOEXP &> ${log[globalLog]}
     fi    
 fi
 sleep 10
@@ -699,13 +797,19 @@ for bs in ${vdbench[blocksize]}; do
 	vdbenchDirectoryResutls
 	#hostRescan
 	for CP in ${vdbench[cmprun]} ; do
-		logger "info" "===[ ${log[testCount]} ]===[ blocksize | $bs ]====[ RATIO | $CP ]=============================================="
+        rate=$( converCompretionRatio $CP )
+		logger "info" "===[ ${log[testCount]} ]===[ blocksize | $bs ]====[ RATIO | $( converCompretionRatio $CP ) ]=============================================="
 		vdbenchResultsFiles
-		vdbenchDeviceList
-		vdbenchWriteTest
-		vdbenchReadTest
+		#vdbenchDeviceList
+		#vdbenchWriteTest
+        getvdbenchResults "write" $CP
+		#vdbenchReadTest
+        getvdbenchResults "read" $CP
 		log[testCount]=$(( log[testCount] + 1 ))
 	done
+    #createJsonFile
+    #uploadJsonFile
+    #sendEmailReport
 done
 # log output example
 # [21/10/16 19:10:22] [INFO] 

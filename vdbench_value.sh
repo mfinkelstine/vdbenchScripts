@@ -11,6 +11,7 @@ declare -A vdbenchResultsLog
 declare -A vdbench
 declare -A storageInfo
 declare -A compressionRatio=( [1.3]="30" [1.7]="50"  [2.3]="65" [3.5]="75" [11]="92" )
+declare -A reversCompratio=( [1.3]="1" [1.7]="2"  [2.3]="3" [3.5]="4" [11]="5" )
 declare -A vdbenchResults
 # color shcames
 red=$'\e[1;31m'
@@ -67,8 +68,7 @@ do
             vdbench_params[clients]="$1"
             shift
             ;;
-        -th | --threads )
-            #thrades="$1"
+        -th | --threads )            
             vdbench[threads]="$1"
             shift
             ;;
@@ -262,6 +262,9 @@ fi
 if [[ ! ${storageInfo[voltype]} ]];then
 #	storageInfo[voltype]="cmp"
 	storageInfo[voltype]="COMPRESSED"
+    vdbench[testmode]="cmp"
+else
+    vdbench[testmode]="clr"
 fi
 if [[ ! ${storageInfo[raidType]} ]] ; then
 	storageInfo[raidType]="raid10"
@@ -334,7 +337,7 @@ function hostRescan(){
 	for c in ${vdbench_params[clients]}; do
         ssh $c /usr/global/scripts/rescan_all.sh &> ${log[globalLog]}
         hostDeviceCount=`ssh $c multipath -ll|grep -c mpath`
-        logger "info" "[ $c ] vdisks found : [ $hostDeviceCount ]"
+        logger "ver" "[ $c ] vdisks found : [ $hostDeviceCount ]"
 		
 		if [[ ${storageInfo[vdiskPerClient]} -ne $hostDeviceCount || -z $hostDeviceCount ]] ; then 
 			logger "fetal" "!!!!! ERROR | unbalanced devices on host $red$c$end | device count [ $red$hostDeviceCount$end ] | ERROR !!!!!" 
@@ -346,6 +349,10 @@ function hostRescan(){
 function converCompretionRatio() {
 	local cmp=$1	
 	printf "%s" ${compressionRatio[$cmp]}	
+}
+function reversCompratio() {
+    local cmp=$1
+    printf "%s" ${reversCompratio[$cmp]}
 }
 
 function removeMdiskGroup(){
@@ -382,14 +389,14 @@ clients=${vdbench_params[clients]}
 storageInfo[hostCount]=0
 logger "info" "Creating hosts ${clients[@]}"
 
-totalFC=0
+vdbench[clientsFCcount]=0
 declare -a hostStorage
 for c in ${vdbench_params[clients]}
 do
 	storageInfo[hostCount]=$(( storageInfo[hostCount] + 1 ))
     wwpn=`ssh $c /usr/global/scripts/qla_show_wwpn.sh | grep Up | awk '{print $1}' | tr "\n" ":"| sed -e 's|\:$||g'`
     wwpnHostCount=`ssh $c /usr/global/scripts/qla_show_wwpn.sh | grep -c Up `
-    totalFC=$(( totalFC + $wwpnHostCount ))
+    vdbench[clientsFCcount]=$(( ${vdbench[clientsFCcount]} + $wwpnHostCount ))
     logger "info"  "Adding host $c " 
     logger "ver"   " Host wwpn $wwpn" 
     logger "debug" " COMMAND \"ssh -p 26 ${storageInfo[stand_name]} svctask mkhost -fcwwpn $wwpn -force -iogrp io_grp0:io_grp1:io_grp2:io_grp3 -name $c -type generic 2>/dev/null\""
@@ -408,10 +415,7 @@ function clearStorageLogs() {
 	logger "info" "Cleaning Storage logs"
 	ssh -p 26 ${storageInfo[stand_name]} svctask clearerrlog -force
 }
-function initLogger(){
-logger "test"
 
-}
 function getStorageInfo(){
 	logger "info" "${storageInfo[stand_name]} Collecting Storage Information"
 	storageInfo[svcVersion]=$( ssh -p 26 ${storageInfo[stand_name]} cat /compass/version )
@@ -421,22 +425,63 @@ function getStorageInfo(){
 	storageInfo[svcBuild]=$( ssh -p 26 ${storageInfo[stand_name]} cat /compass/vrmf )
 	logger "debug" "svc|build|command|\"ssh -p 26 ${storageInfo[stand_name]} cat /compass/vrmf\""
 	logger "ver" "svc|build|output|${storageInfo[svcBuild]}"
-
+    
 	storageInfo[hardware]=$( ssh -p 26 ${storageInfo[stand_name]} sainfo lshardware | grep hardware | awk '{print $2}' )
 	logger "debug" "svc hardware|command|\"ssh -p 26 ${storageInfo[stand_name]} sainfo lshardware | grep hardware | awk '{print \$2}'\"" 
 	logger "ver" "svc|hardware|output|${storageInfo[hardware]}"
-
-	if [[ $( ssh -p 26 ${storageInfo[stand_name]} lscontroller -nohdr | awk '{print $1}') == "" ]]; then
+    if  [[ ${storageInfo[hardware]} =~ "^T5H$|^500$" ]]; then
 		storageInfo[backend]="none"
+        storageInfo[diskType]=$( ssh -p 26 ${storageInfo[stand_name]} lsdrive 0 | grep RPM )
 		logger "debug" "svc|backend|output|${storageInfo[backend]}"
 		logger "debug" "svc|driveCount|command|\"ssh -p 26 ${storageInfo[stand_name]} lsdrive -nohdr | wc -l\""
 		storageInfo[driveCount]=$( ssh -p 26 ${storageInfo[stand_name]} lsdrive -nohdr | wc -l )
 		logger "ver" "svc|driveCount|output|${storageInfo[driveCount]}"
 	else
+        storageInfo[diskType]="None"
 		logger "debug" "svc|backend|command|\"ssh -p 26 ${storageInfo[stand_name]} sainfo lscontroller -nohdr| awk '{print \$1}'\"" 
 		storageInfo[backend]=$( ssh stcon "/opt/FCCon/fcconnect.pl -op showconn -stor ${storageInfo[stand_name]} | grep Storage | awk '{print \$3}'" )
 		logger "ver" "svc|backend|output|${storageInfo[backend]}"
 	fi
+    CMD=($(ssh -p 26 ${storageInfo[stand_name]} ps -eo command,pid | awk '/[r]acemq.*d/ {print $1}'));
+	raceCount="0"
+    for cmd in ${CMD[@]};
+	do
+        logger "ver" "Storage race ${cmd}"
+        if [[ ${cmd} == *"racemqAd"* ]]; then
+	        storageInfo[racemqAd]=$(ssh -p 26 ${storageInfo[stand_name]} ${cmd} -v | sed "/^\s*$/d;s/^ *//" | awk '{print $2}' | sed -e 's/v//g')
+            logger "debug" "COMMAND ssh -p 26 ${storageInfo[stand_name]} ${cmd} -v | sed \"/^\s*$/d;s/^ *//\" | awk '{print \$2}' | sed -e 's/v//g'"
+            logger "ver" "Storage racemqAd ${storageInfo[racemqAd]}"
+            if [[ $( ssh -p 26 ${storageInfo[stand_name]}  ps -efL | grep -v grep | grep -c ${cmd} ) > 2 ]]; then
+                logger "ver" "Storage racemqAd Count $( ssh -p 26 ${storageInfo[stand_name]}  ps -efL | grep -v grep | grep -c ${cmd} )"
+                raceCount=$(( raceCount+1 ))
+            fi
+        elif [[ ${cmd} == *"racemqBd"* ]]; then
+            storageInfo[racemqBd]=$(ssh -p 26 ${storageInfo[stand_name]} ${cmd} -v | sed "/^\s*$/d;s/^ *//" | awk '{print $2}' | sed -e 's/v//g')
+            logger "debug" "COMMAND ssh -p 26 ${storageInfo[stand_name]} ${cmd} -v | sed \"/^\s*$/d;s/^ *//\" | awk '{print \$2}' | sed -e 's/v//g'"
+            logger "ver" "Storage racemqBd ${storageInfo[racemqBd]}"
+            if [[ $( ssh -p 26 ${storageInfo[stand_name]}  ps -efL | grep -v grep | grep -c ${cmd} ) > 2 ]]; then
+                logger "ver" "Storage racemqBd Count $( ssh -p 26 ${storageInfo[stand_name]}  ps -efL | grep -v grep | grep -c ${cmd} )"
+                raceCount=$(( raceCount+1 ))
+            fi
+        elif [[ ${cmd} == *"rtc_racemq"* ]] ; then        
+            storageInfo[rtc_racemq]=$(ssh -p 26 ${storageInfo[stand_name]} ${cmd} -v | sed "/^\s*$/d;s/^ *//" | awk '{print $2}' | sed -e 's/v//g')
+            logger "debug" "COMMAND ssh -p 26 ${storageInfo[stand_name]} ${cmd} -v | sed \"/^\s*$/d;s/^ *//\" | awk '{print \$2}' | sed -e 's/v//g'"
+            logger "ver" "Storage rtc_racemq ${storageInfo[rtc_racemq]}"
+        fi
+    done
+    if [[ -n ${storageInfo[racemqAd]} || -n ${storageInfo[racemqBd]} ]]; then
+        if [[ "${storageInfo[racemqAd]}" == "${storageInfo[racemqBd]}" ]]; then
+            storageInfo[raceMQversion]=${storageInfo[racemqAd]}
+            logger "ver" "raceMQversion ${storageInfo[raceMQversion]}"
+        elif [[ -n "${storageInfo[racemqAd]}" && -z ${storageInfo[racemqBd]} ]];then
+            storageInfo[raceMQversion]=${storageInfo[racemqAd]}
+            logger "ver" "raceMQversion ${storageInfo[raceMQversion]}"
+        fi
+    fi
+    storageInfo[raceBranchType]=`echo ${storageInfo[raceMQversion]} | sed -e 's/^\([0-9]\.[0-9]\).*/\1/'`
+    storageInfo[raceCount]=$raceCount
+    logger "ver" "raceMQversion ${storageInfo[raceCount]}"
+   
 }
 
 function getStorageVolumes(){
@@ -516,42 +561,56 @@ function getvdbenchResults () {
 	local testType=$1
 	local cmp=$2
 	ratio=$(converCompretionRatio $cmp)
-    #logger "info" "compression ratio $ratio"
+    unset readTestResults
 	stresults=$testType"_"$ratio"_"
 	#May 29, 2016  interval        i/o   MB/sec   bytes   read     resp     read    write     resp     resp queue  cpu%  cpu%
     #                             rate  1024**2     i/o    pct     time     resp     resp      max   stddev depth sys+u   sys
 	#13:38:41.062       331   13940.00  3485.00  262144   0.00   36.022    0.000   36.022   61.392    3.935 502.3   NaN   NaN
 	if [ -f ${log[output_file]} ]; then
         logger "debug" "output results ${log[output_file]}"
+        logger "ver" "output results $stresults"
 		if [[ $testType == "write" ]] ; then
-			st=$(cat ${log[output_file]} | egrep "Starting RD|avg_" | head -1)
-			et=$(cat ${log[output_file]} | egrep "Starting RD|avg_" | head -2 | tail -1)
+			st=$(cat ${log[output_file]} | egrep "Starting RD" | head -1)
+			et=$(cat ${log[output_file]} | egrep "avg_" | head -1)
 			writeStartTime=$(echo $st | sed -e 's/\..*//g')
 			writeEndTime=$(echo $et | sed -e 's/\..*//g')
-			declare -a writeTestResults=($(cat ${log[output_file]} | egrep "Starting RD|avg_" | head -2 | tail -1 | awk '{print $2" "$3" "$8 " "$9 }'))
-			vdbenchResults["$stresults""iops"]="${writeTestResults[0]}"
+            logger "debug" "$st:$et" 
+			
+            declare -a writeTestResults=($(cat ${log[output_file]} | egrep "avg_" | head -1 | awk '{print $2" "$3" "$8 " "$9 }'))
+			
+            logger "debug" "$(cat ${log[output_file]} | egrep "avg_" | head -1 ) "
+            logger "ver" "$(cat ${log[output_file]} | egrep "avg_" | head -1 | awk '{print $2" "$3" "$8 " "$9 }')"         
+            vdbenchResults["$stresults""iops"]="${writeTestResults[0]}"
 			vdbenchResults["$stresults""mb"]="${writeTestResults[1]}" #MB throughut
 			vdbenchResults["$stresults""rr"]="${writeTestResults[2]}" #read response
 			vdbenchResults["$stresults""wr"]="${writeTestResults[3]}" #write response
-			vdbenchResults["$stresults""startTest"]="${writeStartTime}"
-			vdbenchResults["$stresults""endTest"]="${writeEndTime}"
-            if [[ ${log[verbose]} == "true" ]]; then displayvdbehcnResults $stresults ; fi
-            logger "info" "[RESULTS]$blu testType$end:$yel$testType$end ratio:$ratio |iops:${vdbenchResults[$stresults"iops"]} |throughut:${vdbenchResults[$stresults"mb"]}"
+			#vdbenchResults["$stresults""startTest"]="${vdbenchResults[writeStart]}  ${writeStartTime}"
+			#vdbenchResults["$stresults""endTest"]="${vdbenchResults[writeEnd]} ${writeEndTime}"
+    		vdbenchResults["$stresults""startTest"]="`date '+%b%d,%Y %T'`"
+			vdbenchResults["$stresults""endTest"]="`date '+%b%d,%Y %T'`"
 
-		elif [[ $testType == "read" ]]; then
-			st=$(cat ${log[output_file]} | egrep "Starting RD|avg_" | tail -2 | head -1|sed -e 's/\..*//g')
-			et=$(cat ${log[output_file]} | egrep "Starting RD|avg_" | tail -1 | sed -e 's/\..*//g')
-			#printf "%10s %10s\n" $st $et
-			declare -a readTestResults=($(cat ${log[output_file]} | egrep "Starting RD|avg_" | head -2 | tail -1 | awk '{print $2" "$3" "$8 " "$9 }'))		
-			results=$(cat ${log[output_file]} | grep -B1 avg| tail -2)
+            if [[ ${log[verbose]} == "true" ]]; then displayvdbehcnResults $stresults ; fi
+            
+            vdbenchResults["CompRatio_"$ratio]=`cat ${log[output_file]} | grep CompRatio | awk '{print $2}'`
+            logger "info" "====[RESULTS]$blu testType$end:$yel$testType$end ratio:$ratio |iops:${vdbenchResults[$stresults"iops"]} |throughut:${vdbenchResults[$stresults"mb"]}"
+            
+		elif [[ $testType == "read" ]]; then			
+            st=$(cat ${log[output_file]} | egrep "Starting RD" | tail -1 |sed -e 's/\..*//g')
+			et=$(cat ${log[output_file]} | egrep "avg_" | tail -1 | sed -e 's/\..*//g')
+			logger "debug" "\n$st\n$et" 
+            
+			declare -a readTestResults=($(cat ${log[output_file]} | egrep "avg_" | tail -1 | awk '{print $2" "$3" "$8 " "$9 }'))		
+			logger "debug" "$(cat ${log[output_file]} | egrep "avg_" | tail -1) "
+            logger "ver" "$(cat ${log[output_file]} | egrep "avg_" | tail -1 | awk '{print $2" "$3" "$8 " "$9 }') "
+            #results=$(cat ${log[output_file]} | grep -B1 avg| tail -2)
 			vdbenchResults["$stresults""iops"]="${readTestResults[0]}"
 			vdbenchResults["$stresults""mb"]="${readTestResults[1]}"
 			vdbenchResults["$stresults""rr"]="${readTestResults[2]}"
 			vdbenchResults["$stresults""wr"]="${readTestResults[3]}"
-			vdbenchResults["$stresults""startTest"]="${st}"
-			vdbenchResults["$stresults""endTest"]="${et}"
+			vdbenchResults["$stresults""startTest"]="${vdbenchResults[readStart]} ${st}"
+			vdbenchResults["$stresults""endTest"]="${vdbenchResults[readEnd]} ${et}"
             if [[ ${log[verbose]} == "true" ]]; then displayvdbehcnResults $stresults ; fi
-            logger "info" "[RESULTS]$blu testType$end:$red$testType$end ratio:$ratio |iops:${vdbenchResults[$stresults"iops"]} |throughut:${vdbenchResults[$stresults"mb"]}"
+            logger "info" "====[RESULTS]$blu testType$end:$red$testType$end  ratio:$ratio |iops:${vdbenchResults[$stresults"iops"]} |throughut:${vdbenchResults[$stresults"mb"]}"
 		fi
 	else
 		logger "info" "output results does not exist${log[output_file]}"
@@ -701,22 +760,31 @@ rd=run1,wd=wd1,iorate=max,elapsed=24h,maxdata=${vdbench[write_data]},warmup=360,
     if [[ ${log[debug]} == 'true' ]]; then
         logger "debug" "log output file ${log[output_file]}"
         logger "debug" "./vdbench -c -f ${vdbench[write_test]} -o ${log[test_data]}/output_$CP | tee -a ${log[output_file]}"
+        vdbenchResults[writeStart]=`date '+%b%d,%Y %T'`
+        vdbenchResults[writeEnd]=`date '+%b%d,%Y %T'`
 	elif [[ ${log[verbose]} == "true" ]]; then
         logger "info" "running write benchmark"
-        logger "ver" "./vdbench -c -f ${vdbench[write_test]} -o ${log[test_data]}/output_$CP | tee -a ${log[output_file]}"     
+        logger "ver" "./vdbench -c -f ${vdbench[write_test]} -o ${log[test_data]}/output_$CP | tee -a ${log[output_file]}"
+        vdbenchResults[writeStart]=`date '+%b%d,%Y %T'`   
         `./vdbench -c -f ${vdbench[write_test]} -o ${log[test_data]}/output_$CP | tee -a ${log[output_file]}`
+        vdbenchResults[writeEnd]=`date '+%b%d,%Y %T'`
         if [[ $? -eq "127" ]]; then
             logger "fetal" "!!!!! ERROR | vdbench failed to run write operation | ERROR !!!!!"
             exit
         fi
+        `./graphite_rtc_cr.py ${storageInfo[stand_name]} >> ${log[output_file]}`
     else
         logger "info" "running write benchmark"
+        vdbenchResults[writeStart]=`date '+%b%d,%Y %T'`
         `./vdbench -c -f ${vdbench[write_test]} -o ${log[test_data]}/output_$CP >> ${log[output_file]}`
+        vdbenchResults[writeEnd]=`date '+%b%d,%Y %T'`
         if [[ $? -eq "127" ]]; then
             logger "fetal" "!!!!! ERROR | vdbench failed to run write operation | ERROR !!!!!"
             exit
         fi
+        `./graphite_rtc_cr.py ${storageInfo[stand_name]} >> ${log[output_file]}`
     fi
+     
 }
 
 function vdbenchReadTest(){
@@ -746,29 +814,76 @@ rd=run1,wd=wd1,iorate=max,elapsed=24h,maxdata=${vdbench[read_data]},warmup=360,i
     if [[ ${log[debug]} == 'true' ]];then
         logger "debug" "executing read benchmark log output file ${log[output_file]}"
         logger "debug" "./vdbench -c -f ${vdbench[read_test]} -o ${log[test_data]}/output_$CP | tee -a ${log[output_file]}"
-
+        vdbenchResults[readStart]=`date '+%b%d,%Y %T'`
+        vdbenchResults[readEnd]=`date '+%b%d,%Y %T'`
 	elif [[ ${log[verbose]} == "true" ]]; then
         logger "ver" "./vbench -c -f ${vdbench[read_test]} -o ${log[test_data]}/output_$CP | tee -a ${log[output_file]}"
+        vdbenchResults[readStart]=`date '+%b%d,%Y %T'`
         `./vdbench -c -f ${vdbench[read_test]} -o ${log[test_data]}/output_$CP | tee -a ${log[output_file]}`
+        vdbenchResults[readEnd]=`date '+%b%d,%Y %T'`
         if [[ $? -eq "127" ]]; then
             logger "fetal" "!!!!! ERROR | vdbench failed to run read operation | ERROR !!!!!"
             exit
         fi
     else
         logger "info" "running read benchmark"
+        vdbenchResults[readStart]=`date '+%b%d,%Y %T'`
         `./vdbench -c -f ${vdbench[read_test]} -o ${log[test_data]}/output_$CP >> ${log[output_file]}`
+        vdbenchResults[readEnd]=`date '+%b%d,%Y %T'`
         if [[ $? -eq "127" ]]; then
             logger "fetal" "!!!!! ERROR | vdbench failed to run read operation | ERROR !!!!!"
             exit
         fi
     fi
 }
-function displayVdbenchResults() {
-        path=/benchmark_results/7.6.1.1/124.4.1603211401000/160523_094004/64k/
-        ${log[output_file]}
+function createJsonFile() {
+    local vdbenchJson
+    vdbenchJson=${log[logPath]}"/vdbench_"${vdbenchResults["vdbenchTestDate_"$ratio]}"_"${storageInfo[stand_name]}"_"${storageInfo[svcBuild]}"_${vdbench[runBlocksize]}.json"
     
+    echo "{
+	\"startTime\":      	\"${vdbenchResults[vdbenchStarted]}\",
+	\"endTime\":        	\"${vdbenchResults[vdbenchEnded]}\",
+        \"ResultsType\":    	\"DEV\",
+	\"testType\":       	\"IOZONE\",
+	\"stand\":          	\"${storageInfo[stand_name]}\",
+	\"SVC_Version\":    	\"${storageInfo[svcVersion]}\",
+	\"SVCBuilds\":      	\"${storageInfo[svcBuild]}\",
+	\"backend\":        	\"${storageInfo[backend]}\",
+	\"diskType\":       	\"${storageInfo[diskType]}\",
+	\"noOfDisks\":            \"${storageInfo[mdiskCount]}\",
+	\"totalDisks\":           \"${storageInfo[mdiskSize]}\",
+	\"Raid\":                 \"${storageInfo[raidType]}\",
+	\"RaceBranchType\":       \"${storageInfo[raceBranchType]}\",
+	\"RaceMQVersion\":        \"${storageInfo[raceMQversion]}\",
+	\"MultiRace\":            \"${storageInfo[raceCount]}\",
+	\"testmode\":             \"${vdbench[testmode]}\",
+	\"vdiskCount\":           \"${storageInfo[volnum]}\",
+	\"vdiskSize\":            \"${storageInfo[volsize]}${storageInfo[volsizeunit]}\",
+	\"coleto\":         	\"\",
+	\"coleto_level\":   	\"2\",
+	\"blocksize\":      	\"${vdbench[runBlocksize]}\",
+	\"ClientMgmt\":     	\"NONE\",
+	\"Clients\":        	\"${vdbench_params[clients]}\",
+	\"ClientsNum\":     	\"${storageInfo[hostCount]}\",
+	\"ThreadsPerClient\":     \"${vdbench[threads]}\",
+	\"LunPerClient\":         \"32\"," > $vdbenchJson
     
+    #for value in ${vdbench_params[]} ; then 
+    for CP in ${vdbench[cmprun]}; do 
+    count=0
+    ratio=$( converCompretionRatio $CP)
+    echo "        \"iozone${reversCompratio[$CP]}\":              \"${vdbenchResults["CompRatio_"$ratio]}\",
+        \"date${reversCompratio[$CP]}\":                \"${vdbenchResults["vdbenchTestDate_"$ratio]}\",  
+        \"st${reversCompratio[$CP]}\":                  \"${vdbenchResults["write_"$ratio"_startTest"]}\",
+        \"et${reversCompratio[$CP]}\":                  \"${vdbenchResults["write_"$ratio"_endTest"]}\",
+        \"write${reversCompratio[$CP]}\":               \"${vdbenchResults["write_"$ratio"_mb"]}\",
+        \"read${reversCompratio[$CP]}\":                \"${vdbenchResults["read_"$ratio"_mb"]}\"," >> $vdbenchJson
+    done
+    echo "        \"FCperClient\":          \"${vdbench[clientsFCcount]}\"
+    }" >> $vdbenchJson
+    logger "info" "JsonFile : $vdbenchJson"
 }
+
 #function _info(){ echo }
 #function _error(){ echo }
 #function _verbose(){ echo }
@@ -788,29 +903,39 @@ vdbenchMainDirectoryCreation
 #removeStorageHosts
 #removeMdiskGroup
 #createHosts
-
+vdbenchResults[vdbenchStarted]=`date '+%b%d,%Y %T'`
 for bs in ${vdbench[blocksize]}; do
-	log[testCount]=1
+	vdbench[runBlocksize]=$bs
+    log[testCount]=1
 #	createStorageVolumes
     #logger "info" "exit after function : createStorageVolumes" ; exit
 	getStorageVolumes
 	vdbenchDirectoryResutls
 	#hostRescan
 	for CP in ${vdbench[cmprun]} ; do
+        vdbenchResults["dateStarted_"$CP]=`date '+%b%d,%Y %T'`
         rate=$( converCompretionRatio $CP )
+        vdbenchResults["vdbenchTestDate_"$rate]=`date '+%b%d,%Y'`
 		logger "info" "===[ ${log[testCount]} ]===[ blocksize | $bs ]====[ RATIO | $( converCompretionRatio $CP ) ]=============================================="
 		vdbenchResultsFiles
 		#vdbenchDeviceList
-		#vdbenchWriteTest
+		vdbenchResults[writeStart]=`date '+%b%d,%Y %T'`
+        #vdbenchWriteTest
+        vdbenchResults[writeEnd]=`date '+%b%d,%Y %T'`
         getvdbenchResults "write" $CP
-		#vdbenchReadTest
+	    vdbenchResults[readStart]=`date '+%b%d,%Y %T'`
+    	#vdbenchReadTest
+        vdbenchResults[readEnd]=`date '+%b%d,%Y %T'`
         getvdbenchResults "read" $CP
 		log[testCount]=$(( log[testCount] + 1 ))
+        
 	done
-    #createJsonFile
+    vdbenchResults[vdbenchEnded]=`date '+%b%d,%Y %T'`
+    createJsonFile
     #uploadJsonFile
     #sendEmailReport
 done
+
 # log output example
 # [21/10/16 19:10:22] [INFO] 
 # [21/10/16 19:10:22] [ERROR] 
